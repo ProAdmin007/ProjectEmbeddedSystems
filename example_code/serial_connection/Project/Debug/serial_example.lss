@@ -17,17 +17,17 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   6 .debug_abbrev 00000671  00000000  00000000  000008c2  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000003ea  00000000  00000000  00000f33  2**0
+  7 .debug_line   000003e6  00000000  00000000  00000f33  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000054  00000000  00000000  00001320  2**2
+  8 .debug_frame  00000054  00000000  00000000  0000131c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00006937  00000000  00000000  00001374  2**0
+  9 .debug_str    00006943  00000000  00000000  00001370  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000026  00000000  00000000  00007cab  2**0
+ 10 .debug_loc    00000026  00000000  00000000  00007cb3  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000028  00000000  00000000  00007cd1  2**0
+ 11 .debug_ranges 00000028  00000000  00000000  00007cd9  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_macro  000000a3  00000000  00000000  00007cf9  2**0
+ 12 .debug_macro  00000097  00000000  00000000  00007d01  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -115,7 +115,7 @@ void USART_Init(unsigned int ubrr){
   82:	88 e1       	ldi	r24, 0x18	; 24
   84:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__DATA_REGION_ORIGIN__+0x61>
 	
-	// set frame format: 8data, 2stop bit
+	// set frame format: 8data, 2 stop bit
 	UCSR0C = (1<<USBS0)|(3<<UCSZ00);
   88:	8e e0       	ldi	r24, 0x0E	; 14
   8a:	80 93 c2 00 	sts	0x00C2, r24	; 0x8000c2 <__DATA_REGION_ORIGIN__+0x62>
@@ -136,7 +136,7 @@ void USART_Transmit(unsigned char data){
   9e:	08 95       	ret
 
 000000a0 <main>:
-#define MYUBRR 103 // UBBRN value from atmega328p datasheet pagina 165
+#define MYUBRR 103
 
 
 int main(void){
@@ -145,9 +145,7 @@ int main(void){
   a0:	87 e6       	ldi	r24, 0x67	; 103
   a2:	90 e0       	ldi	r25, 0x00	; 0
   a4:	ea df       	rcall	.-44     	; 0x7a <USART_Init>
-	
 	while(1){
-		// send data over serial connection
 		USART_Transmit(0x69);
   a6:	89 e6       	ldi	r24, 0x69	; 105
   a8:	f3 df       	rcall	.-26     	; 0x90 <USART_Transmit>
