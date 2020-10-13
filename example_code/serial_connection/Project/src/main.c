@@ -1,18 +1,21 @@
 #include <avr/io.h>
 #include <functions.h>
 
-#define FOSC 1843200 // Clock Speed
-#define BAUD 9600
-#define MYUBRR 103 // UBBRN value from atmega328p datasheet pagina 165
+// clock speed arduino == 16.000.000 Hz
+// baud rate to be used == 9600
+// USART baud rate register (UBRR) == (clockspeed / (16* baudrate)) - 1
+// so our UBRR == 103
+// can also be found as example value,
+// on the atmega328p datasheet page 165
+#define MYUBRR 103
 
 
 int main(void){
 	// initialize serial connection
 	USART_Init(MYUBRR);
-	
 	while(1){
-		// send data over serial connection
 		USART_Transmit(0x69);
+		// send data over serial connection
 	}
 }
 
@@ -24,7 +27,7 @@ void USART_Init(unsigned int ubrr){
 	// enable receiver and transmitter
 	UCSR0B = (1<<RXEN0)|(1<<TXEN0);
 	
-	// set frame format: 8data, 2stop bit
+	// set frame format: 8data, 2 stop bit
 	UCSR0C = (1<<USBS0)|(3<<UCSZ00);
 }
 
@@ -44,7 +47,6 @@ void init_ports(void){
 	// pinD2 == output led
 	// pinD3 == output led
 	// pinD4 == output led
-	DDRD=0b00011100;
 	
 	// pinB0 == sonar echo
 	// pinB1 == sonar trigger

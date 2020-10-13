@@ -87,7 +87,7 @@ Discarded input sections
  .data          0x00000000        0x0 src/main.o
  .bss           0x00000000        0x0 src/main.o
  .text.init_ports
-                0x00000000        0x6 src/main.o
+                0x00000000        0x2 src/main.o
  .debug_macro   0x00000000      0xa4e src/main.o
  .debug_macro   0x00000000       0x10 src/main.o
  .debug_macro   0x00000000      0x1c9 src/main.o
@@ -469,20 +469,20 @@ END GROUP
  .debug_abbrev  0x00000000      0x5a2 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.3.300/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_abbrev  0x000005a2       0xcf src/main.o
 
-.debug_line     0x00000000      0x3ea
+.debug_line     0x00000000      0x3e6
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x133 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.3.300/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_line    0x00000133      0x2b7 src/main.o
+ .debug_line    0x00000133      0x2b3 src/main.o
 
 .debug_frame    0x00000000       0x54
  *(.debug_frame)
  .debug_frame   0x00000000       0x54 src/main.o
 
-.debug_str      0x00000000     0x6937
+.debug_str      0x00000000     0x6943
  *(.debug_str)
  .debug_str     0x00000000      0x208 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.3.300/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_str     0x00000208     0x672f src/main.o
-                               0x67da (size before relaxing)
+ .debug_str     0x00000208     0x673b src/main.o
+                               0x67e6 (size before relaxing)
 
 .debug_loc      0x00000000       0x26
  *(.debug_loc)
@@ -510,8 +510,8 @@ END GROUP
  *(.debug_ranges)
  .debug_ranges  0x00000000       0x28 src/main.o
 
-.debug_macro    0x00000000       0xa3
+.debug_macro    0x00000000       0x97
  *(.debug_macro)
- .debug_macro   0x00000000       0xa3 src/main.o
+ .debug_macro   0x00000000       0x97 src/main.o
 OUTPUT(serial_example.elf elf32-avr)
 LOAD linker stubs
