@@ -33,11 +33,14 @@ void USART_init(unsigned int ubrr){
 }
 
 void USART_transmit(unsigned char data){
+	// check if the UDRE register is high in UCSR0A
+	// if it's high than the transmit buffer is ready to receive new data
+	// which means the data can be sent
 	while (!(UCSR0A & (1<<UDRE0)));
 	UDR0 = data;
 }
 
-// initialize the Analoge to Digital Converter
+// initialize the Analog to Digital Converter
 void init_ADC(void){
 	// disable the power reduction ADC bit
 	PRR = (0<<PRADC);
@@ -48,9 +51,9 @@ void init_ADC(void){
 	ADMUX = (0 << REFS1) | (0 << REFS0) | (1 << ADLAR);
 	
 	// IMPORTANT
-	// set the ADC prescaler register
-	// the adc requires a clock speed between 50KHz and 200Khz
-	// all three bits high is a prescaller of 128
+	// set the ADC pre-scaler register
+	// the ADC requires a clock speed between 50KHz and 200Khz
+	// all three bits high is a pre-scaler of 128
 	// which gives us a ADC clock speed of 16Mhz / 128 = 125KHz
 	// not setting these bits gives garbage data (0xFF), since the default clock speed is 16MHz
 	ADCSRA |= (0b0111);
@@ -68,23 +71,24 @@ int get_light(void){
 int get_analog(int pin){
 	// failsafe
 	// if the pin > 3, you could override some of the important settings bits.
-	// so if pin > 3, just return 0
+	// so if pin > 3, return 0xEE
+	// if you only receive 0xEE, something went wrong with the pin definition
 	if(pin > 3){
-		return 0;
+		return 0xEE;
 	}
 	
 	// clear everything in ADMUX except low 4 high bits
+	// done so we can define a new port to read based on the given argument
 	ADMUX &= 0xF0;
 	
 	// set the desired input pin
 	// the to be used pin correspond to the binary representation of that pin
-	// so  pin 0 = 0b0000
-	//     pin 1 = 0b0001
-	//     pin 2 = 0b0010
-	//	   pin 3 = 0b0011
+	// so  pin 0 = 0b0000 -> decimal 0
+	//     pin 1 = 0b0001 -> decimal 1
+	//     pin 2 = 0b0010 -> decimal 2
+	//	   pin 3 = 0b0011 -> decimal 3
 	// where these 4 bits are the 4 low bits in ADMUX
-	// sidenote: the atmega328p supports up to 8 different ADC ports, but the arduino only has 4
-	// see atmega328p datasheet page 218 for more
+	// see atmega328p data sheet page 218 for more
 	ADMUX |= pin;
 	
 	// start a conversion by setting the start conversion bit in ADCSRA
@@ -95,9 +99,7 @@ int get_analog(int pin){
 	
 	// return the value of the conversion
 	// since we use a left adjust we only have to read ADCH
+	// TODO: maybe change function to return both ADCL and ADCH for better resolution
+	//		 don't forget to change ADLAR in ADMUX to 0 when doing the above
 	return ADCH;
-}
-
-void init_ports(void){
-
 }
