@@ -22,8 +22,9 @@ BAUD = 9600
 timeout = 5
 port = 'COM{}'.format(sys.argv[1])
 
-def read():
+def read(bytes_nr=1):
 	with serial.Serial(port, BAUD, timeout=timeout) as ser:
 		while True:
-			data = ser.read().hex()
-			print('0x{}'.format(data))
+			data_hex = ser.read(bytes_nr).hex()
+			data_nr = int(data_hex, 16)
+			print('0x{} - {}'.format(data_hex, data_nr))

@@ -46,9 +46,9 @@ void init_ADC(void){
 	PRR = (0<<PRADC);
 	
 	// set the ADMUX register
-	// set REFS1 and REFS0 low -> Use Aref for ADC, disable internal Vref
+	// set REFS1 high and REFS0 low -> use AVcc as reference voltage
 	// set ADLAR high -> ADC Left Adjust to use only 8 bits resolution
-	ADMUX = (0 << REFS1) | (0 << REFS0) | (1 << ADLAR);
+	ADMUX = (0 << REFS1) | (1 << REFS0) | (1 << ADLAR);
 	
 	// IMPORTANT
 	// set the ADC pre-scaler register
