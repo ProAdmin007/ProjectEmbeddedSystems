@@ -5,7 +5,7 @@
 #define MYUBRR				103
 
 #define ECHO_PIN			PIND3		// INT0
-#define TRIGGER_PIN			PINB0		// PIN 8
+#define TRIGGER_PIN			PINB0		// Arduino PIN 8
 
 #include <asf.h>
 #include <avr/io.h>
@@ -88,6 +88,7 @@ ISR (INT1_vect){
 		return;
 	}
 	if (TCCR1B == 0x01){		// check if the timer is enabled
+		TCCR1B = 0x00;
 		counter_l = TCNT1L;		// save low counter bits saving variable
 		counter_h = TCNT1H;		// save high counter bits saving variable
 
