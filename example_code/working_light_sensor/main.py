@@ -19,12 +19,15 @@ if len(sys.argv) == 1:
 	raise Exception('\n\nNo arguments given for comport. Read main.py for more information.')
 
 BAUD = 9600
-timeout = 5
+timeout = 2
 port = 'COM{}'.format(sys.argv[1])
 
 def read(bytes_nr=1):
 	with serial.Serial(port, BAUD, timeout=timeout) as ser:
 		while True:
 			data_hex = ser.read(bytes_nr).hex()
-			data_nr = int(data_hex, 16)
+			data_nr = str(data_hex)
+			if data_nr == '':
+				data_nr = '0'
+			data_nr = int(data_nr, 16)
 			print('0x{} - {}'.format(data_hex, data_nr))

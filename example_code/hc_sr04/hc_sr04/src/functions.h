@@ -17,7 +17,7 @@ void HCSR04_time_distance(void);
 void HCSR04_get_distance(void);
 
 void interrupts_init(void);
-
+void init_debug(void);
 void USART_Init(unsigned int);
 void USART_Transmit(unsigned char);
 

@@ -19,10 +19,14 @@ volatile int echorecv;
 
 int main(void){
 	HCSR04_init_pins();				// initialize HCSR04 pins
+	HCSR04_counter_init();			// initialize HCSR04 counter
+	
 	interrupts_init();				// initialize interrupts
 	USART_Init(MYUBRR);				// enable USART
 	
 	echorecv = 0;					// clear echo received variable
+	
+	init_debug();
 	
 	while(1){
 		HCSR04_get_distance();
@@ -32,9 +36,11 @@ int main(void){
 void HCSR04_get_distance(){
 	HCSR04_send_pulse();			// send a pulse
 	while(echorecv != 1);			// wait for the echo to be sent back
-	USART_Transmit(counter_h);		// send counter bits
-	USART_Transmit(counter_l);
 	_delay_ms(500);
+}
+
+void init_debug(){								// temporary debug function
+	DDRD |= (1<<PIND4) | (1<<PIND5) | (1<<PIND6);	// init LEDs for use as visual debug
 }
 
 void interrupts_init(){
@@ -48,6 +54,7 @@ void HCSR04_send_pulse(){
 	PORTB = (1<<TRIGGER_PIN);		// set trigger high
 	_delay_ms(15);					// wait 15 ms (trigger has to be at least 10ms)
 	PORTB = (0<<TRIGGER_PIN);		// set trigger low
+	
 }
 
 // initialize the HCSR04 pins
@@ -62,14 +69,13 @@ void HCSR04_init_pins(){
 // uses TCCR1A
 void HCSR04_counter_init(){
 	TCCR1A = 0x00;				// use standard settings
-	TCCR1B = 0x00;				// use standard settings (timer is disabled)
+	TCCR1B = 0x00;			
 	TCCR1C = 0x00;				// use standard settings
 }
 
 // triggers on a logical change on INT1
 ISR (INT1_vect){
 	if (TCCR1B == 0x00){		// check if timer is disabled
-		
 		echorecv = 0;			// set echo received flag low
 		
 		TCNT1L = 0x00;			// clear low counter bits
@@ -79,17 +85,21 @@ ISR (INT1_vect){
 		counter_h = 0x00;		// clear high counter bits saving variable
 		
 		TCCR1B = (1<<CS10);		// enable timer
+		return;
 	}
 	if (TCCR1B == 0x01){		// check if the timer is enabled
-		TCCR1B = 0x00;			// disable the timer
-
 		counter_l = TCNT1L;		// save low counter bits saving variable
 		counter_h = TCNT1H;		// save high counter bits saving variable
+
+		USART_Transmit(TCNT1H);
+		USART_Transmit(TCNT1L);
+
 		
 		TCNT1L = 0x00;			// clear low counter bits
 		TCNT1H = 0x00;			// clear high counter bits
 		
 		echorecv = 1;			// set echo received flag high
+		return;
 	}
 }
 
