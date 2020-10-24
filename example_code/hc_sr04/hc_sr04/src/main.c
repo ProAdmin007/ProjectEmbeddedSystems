@@ -22,25 +22,19 @@ int main(void){
 	HCSR04_counter_init();			// initialize HCSR04 counter
 	
 	interrupts_init();				// initialize interrupts
-	USART_Init(MYUBRR);				// enable USART
+	USART_Init(MYUBRR);				// initialize USART
 	
 	echorecv = 0;					// clear echo received variable
 	
-	init_debug();
-	
-	while(1){
-		HCSR04_get_distance();
+	while(1){						// main loop
+		HCSR04_get_distance();		// get the distance from the HCSR04
 	}
 }
 
 void HCSR04_get_distance(){
 	HCSR04_send_pulse();			// send a pulse
 	while(echorecv != 1);			// wait for the echo to be sent back
-	_delay_ms(500);
-}
-
-void init_debug(){								// temporary debug function
-	DDRD |= (1<<PIND4) | (1<<PIND5) | (1<<PIND6);	// init LEDs for use as visual debug
+	_delay_ms(500);					// 500ms delay until the next pulse. not really needed tho
 }
 
 void interrupts_init(){
@@ -68,9 +62,9 @@ void HCSR04_init_pins(){
 // initialize the clock for the HC-SR04
 // uses TCCR1A
 void HCSR04_counter_init(){
-	TCCR1A = 0x00;				// use standard settings
-	TCCR1B = 0x00;			
-	TCCR1C = 0x00;				// use standard settings
+	TCCR1A = 0x00;				// clear all timer settings just to be sure
+	TCCR1B = 0x00;				// no need to enable any additional options, standard is fine
+	TCCR1C = 0x00;				// timer is also disabled until the ISR is triggered
 }
 
 // triggers on a logical change on INT1
@@ -84,23 +78,24 @@ ISR (INT1_vect){
 		counter_l = 0x00;		// clear low counter bits saving variable
 		counter_h = 0x00;		// clear high counter bits saving variable
 		
-		TCCR1B = (1<<CS10);		// enable timer
-		return;
+		TCCR1B = (1<<CS11);		// enable timer, with a pre-scaler of 8. 
+								// the pre-scaler prevents the timer from overflowing 
+								// if there is nothing in front of the sensor
+		return;					// exit the ISR
 	}
-	if (TCCR1B == 0x01){		// check if the timer is enabled
-		TCCR1B = 0x00;
+	if (TCCR1B == (1<<CS11)){	// check if the timer is enabled
+		TCCR1B = 0x00;			// disable the timer
 		counter_l = TCNT1L;		// save low counter bits saving variable
 		counter_h = TCNT1H;		// save high counter bits saving variable
 
-		USART_Transmit(TCNT1H);
-		USART_Transmit(TCNT1L);
+		USART_Transmit(TCNT1H);	// send high data bits
+		USART_Transmit(TCNT1L); // send low data bits
 
-		
 		TCNT1L = 0x00;			// clear low counter bits
 		TCNT1H = 0x00;			// clear high counter bits
 		
 		echorecv = 1;			// set echo received flag high
-		return;
+		return;					// exit the ISR
 	}
 }
 
