@@ -9,7 +9,7 @@ class Main(tk.Tk):
         tk.Tk.wm_title(self, "Trollluik Interface")
         self.resizable(0, 0)
         self.geometry('400x300')
-        self.iconbitmap('d:/Documents/2.1/logo.ico')                #to-do make portable
+    #   self.iconbitmap('d:/Documents/2.1/logo.ico')                #to-do make portable
 
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
@@ -96,18 +96,19 @@ class AddRoom(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
+""""
         RoomMessage = tk.Label(self, text = "Kamer toevoegen")
         Name = tk.Label(text = "Naam:")
         NameEntry = tk.Entry()
         AddButton = tk.Button()
         CancelButton = tk.Button()
     
-        RoomMessage.grid()
+        RoomMessage.pack()
         Name.grid()
         NameEntry.grid()
-        AddButton.grid()
-        CancelButton.grid()
-
+       # AddButton.grid()
+        #CancelButton.grid()
+""""
 
 class RemoveRoom(tk.Frame):
 
