@@ -11,9 +11,7 @@
 
 void HCSR04_init_pins(void);
 void HCSR04_counter_init(void);
-void HCSR04_start_counter(void);
 void HCSR04_send_pulse(void);
-void HCSR04_time_distance(void);
 void HCSR04_get_distance(void);
 
 void interrupts_init(void);
