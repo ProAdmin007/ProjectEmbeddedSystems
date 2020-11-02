@@ -8,8 +8,8 @@ class Main(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         tk.Tk.wm_title(self, "Trollluik Interface")
         self.resizable(0, 0)
-        self.geometry('400x300')
-    #   self.iconbitmap('d:/Documents/2.1/logo.ico')                #to-do make portable
+        self.geometry('800x600')
+        self.iconbitmap('logo.ico')
 
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
@@ -40,7 +40,6 @@ class HomeScreen(tk.Frame):
 
         lframe = tk.LabelFrame(self, padx=5, pady=5)
         rframe = tk.LabelFrame(self, padx=5, pady=5)
-
         lframe.grid(row= 0, column = 0, padx=5, pady=5)
         rframe.grid(row= 0, column = 1, padx=5, pady=5, rowspan = 10)
 
@@ -48,7 +47,7 @@ class HomeScreen(tk.Frame):
         rooms = tk.Label(lframe, text = "Kamers")
         add = tk.Button(lframe, text = "  +  ", command = lambda: controller.show_frame("AddRoom"))           #word pop-up ipv framelayer ?
         remove = tk.Button(lframe, text = "  -  ", command = lambda: controller.show_frame("RemoveRoom"))     #word pop-up ipv framelayer
-        listbox = tk.Listbox(lframe)
+        listbox = tk.Listbox(lframe,height=30)
         for values in range(100):                           #placeholder "list"
             listbox.insert(tk.END, values) 
         scrollbar = tk.Scrollbar(lframe,)
@@ -60,7 +59,7 @@ class HomeScreen(tk.Frame):
         welcome.pack()
         rooms.grid(row = 0, column = 0)
         listbox.grid(row = 1, column = 0, padx = 5, pady =5)
-        scrollbar.grid(row = 1, column = 1,)
+        scrollbar.grid(row = 1, column = 1,sticky="NS")
         add.grid(row = 2, column = 0, padx = 10, pady = 5)
         remove.grid(row = 2, column = 1, padx = 10, pady = 5)
 
