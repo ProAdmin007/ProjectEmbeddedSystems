@@ -9,7 +9,7 @@ class Main(tk.Tk):
         tk.Tk.wm_title(self, "Trollluik Interface")
         self.resizable(0, 0)
         self.geometry('800x600')
-        self.iconbitmap('logo.ico')
+        #self.iconbitmap('logo.ico')
 
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
