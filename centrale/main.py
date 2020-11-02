@@ -9,7 +9,7 @@ class Main(tk.Tk):
         tk.Tk.wm_title(self, "Trollluik Interface")
         self.resizable(0, 0)
         self.geometry('800x600')
-        #self.iconbitmap('logo.ico')
+        self.iconbitmap('logo.ico')
 
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
@@ -42,7 +42,7 @@ class HomeScreen(tk.Frame):
         rframe = tk.LabelFrame(self, padx=5, pady=5)
         lframe.grid(row= 0, column = 0, padx=5, pady=5)
         rframe.grid(row= 0, column = 1, padx=5, pady=5, rowspan = 10)
-
+        # de tekst die op de rechter kant komt te staan.
         welcome = tk.Label(rframe, wraplength = 150,height=36,width=80, text = "balkbalssjhdgfsajd gfasjdfg sajdhfgasdkjhf gasdjhf gaskdlfjg askldfgaskldjf hasjkdfh")
         rooms = tk.Label(lframe, text = "Kamers")
         add = tk.Button(lframe, text = "  +  ", command = lambda: controller.show_frame("AddRoom"),width=7)           #word pop-up ipv framelayer ?
