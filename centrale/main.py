@@ -43,10 +43,10 @@ class HomeScreen(tk.Frame):
         lframe.grid(row= 0, column = 0, padx=5, pady=5)
         rframe.grid(row= 0, column = 1, padx=5, pady=5, rowspan = 10)
 
-        welcome = tk.Label(rframe, wraplength = 150, text = "balkbalssjhdgfsajd gfasjdfg sajdhfgasdkjhf gasdjhf gaskdlfjg askldfgaskldjf hasjkdfh")
+        welcome = tk.Label(rframe, wraplength = 150,height=36,width=80, text = "balkbalssjhdgfsajd gfasjdfg sajdhfgasdkjhf gasdjhf gaskdlfjg askldfgaskldjf hasjkdfh")
         rooms = tk.Label(lframe, text = "Kamers")
-        add = tk.Button(lframe, text = "  +  ", command = lambda: controller.show_frame("AddRoom"))           #word pop-up ipv framelayer ?
-        remove = tk.Button(lframe, text = "  -  ", command = lambda: controller.show_frame("RemoveRoom"))     #word pop-up ipv framelayer
+        add = tk.Button(lframe, text = "  +  ", command = lambda: controller.show_frame("AddRoom"),width=7)           #word pop-up ipv framelayer ?
+        remove = tk.Button(lframe, text = "  -  ", command = lambda: controller.show_frame("RemoveRoom"),width=7)     #word pop-up ipv framelayer
         listbox = tk.Listbox(lframe,height=30)
         for values in range(100):                           #placeholder "list"
             listbox.insert(tk.END, values) 
@@ -56,12 +56,12 @@ class HomeScreen(tk.Frame):
         listbox.config(yscrollcommand = scrollbar.set)
         scrollbar.config(command = listbox.yview) 
 
-        welcome.pack()
+        welcome.pack(expand="true")
         rooms.grid(row = 0, column = 0)
         listbox.grid(row = 1, column = 0, padx = 5, pady =5)
-        scrollbar.grid(row = 1, column = 1,sticky="NS")
-        add.grid(row = 2, column = 0, padx = 10, pady = 5)
-        remove.grid(row = 2, column = 1, padx = 10, pady = 5)
+        scrollbar.grid(row = 1, column = 1,sticky="NS") # sticky NS so he can streatch the whole grid. otherwise it would be  a small scrollbar :)
+        add.grid(row = 2, column = 0, padx = 0, pady = 5,sticky="W")
+        remove.grid(row = 2, column = 0, padx = 0, pady = 5,sticky="E")
 
 
 #    def removeRoomWindow(self):
