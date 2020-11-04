@@ -190,16 +190,26 @@
     <Folder Include="src\ASF\mega\utils\assembler\" />
     <Folder Include="src\ASF\mega\utils\preprocessor\" />
     <Folder Include="src\config\" />
+    <Folder Include="src\analog" />
     <Folder Include="src\USART" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\includes.h">
+    <Compile Include="src\inc_def.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\USART\definitions.h">
+    <Compile Include="src\analog\analog_definitions.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\USART\functions.h">
+    <Compile Include="src\analog\analog_functions.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\analog\analog.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\USART\USART_definitions.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\USART\USART_functions.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\USART\USART.c">

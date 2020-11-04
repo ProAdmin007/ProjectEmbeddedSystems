@@ -6,8 +6,8 @@
  */ 
 
 
-#ifndef DEFINES_H_
-#define DEFINES_H_
+#ifndef USART_DEFINITIONS_H_
+#define USART_DEFINITIONS_H_
 
 // clock speed arduino == 16.000.000 Hz
 // baud rate to be used == 9600
@@ -17,4 +17,4 @@
 // on the atmega328p datasheet page 165
 #define MYUBRR 103
 
-#endif /* DEFINES_H_ */
+#endif /* USART_DEFINITIONS_H_ */
