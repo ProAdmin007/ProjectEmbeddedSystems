@@ -19,6 +19,10 @@
 #include "./analog/analog_definitions.h"
 #include "./analog/analog_functions.h"
 
+// distance sensor files
+#include "./HCSR04/HCSR04_definitions.h"
+#include "./HCSR04/HCSR04_functions.h"
+
 #define F_CPU 16E6
 #include <util/delay.h>
 

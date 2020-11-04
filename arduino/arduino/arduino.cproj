@@ -191,9 +191,19 @@
     <Folder Include="src\ASF\mega\utils\preprocessor\" />
     <Folder Include="src\config\" />
     <Folder Include="src\analog" />
+    <Folder Include="src\HCSR04" />
     <Folder Include="src\USART" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\HCSR04\HCSR04_definitions.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\HCSR04\HCSR04_functions.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\HCSR04\HCSR04.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\inc_def.h">
       <SubType>compile</SubType>
     </Compile>
