@@ -11,8 +11,7 @@ class Page(tk.Frame):
 class Homepage(Page):
    def __init__(self, *args, **kwargs):
        Page.__init__(self, *args, **kwargs)
-       roomsdict = self.master.rooms
-       print(roomsdict)
+
        lframe = tk.LabelFrame(self, padx=5, pady=5)
        rframe = tk.LabelFrame(self, padx=5, pady=5)
        lframe.grid(row= 0, column = 0, padx=5, pady=5)
@@ -24,6 +23,7 @@ class Homepage(Page):
        rooms = tk.Label(lframe, text = "Kamers")
        add = tk.Button(lframe, text = "  +  ", command = lambda: self.master.showroom('addroom'),width=7)           #word pop-up ipv framelayer
        remove = tk.Button(lframe, text = "  -  ", command = lambda: self.master.showroom('removeroom'),width=7)     #word pop-up ipv framelayer
+
 
        listbox = tk.Listbox(lframe,height=30)
        for values in range(100):                           #placeholder "list"
@@ -67,6 +67,7 @@ class MainView(tk.Frame):
 
     def showroom(self, room):
         self.rooms[room].show()
+
 
 # init for the tkinter screen
 if __name__ == "__main__":
