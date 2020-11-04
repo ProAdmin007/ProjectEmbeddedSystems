@@ -97,15 +97,15 @@ class AddRoom(tk.Frame):
 
 
         #RoomMessage = tk.Label(self, text = "Kamer toevoegen")
-       # Name = tk.Label(text = "Naam:")
-       # NameEntry = tk.Entry()
-       # AddButton = tk.Button()
-      #  CancelButton = tk.Button()
+        #Name = tk.Label(text = "Naam:")
+        #NameEntry = tk.Entry()
+        #AddButton = tk.Button()
+        #CancelButton = tk.Button()
     
-       # RoomMessage.pack()
+        #RoomMessage.pack()
         #Name.grid()
         #NameEntry.grid()
-       # AddButton.grid()
+        #AddButton.grid()
         #CancelButton.grid()
 
 
