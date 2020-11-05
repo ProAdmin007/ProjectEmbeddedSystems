@@ -1,26 +1,22 @@
 import serial
-import time
-import re 
-import csv 
-import numpy as np 
-
-sample_time = 0.1
-
-#list met tmp data
-tmpList = []
-
-#verander de com port naar de goeie poort!
 ser = serial.Serial('COM3', 9600,timeout=10)
-ser.read(2)
+data = ser.read(2)
+#data.split("x")
+data_dict = {}
+print("Datatype is: ",type(data))
 
-#berekeing
-temperatureC = (5 - 0.5) * 100
+dataInt = int.from_bytes(data, byteorder='big')
 
-# Collecting the data from the serial port 
-while True: 
-    line = ser.readline()
-    line_data = re.findall('\d*\.\d*',str(line))
-    line_data = filter(None,line_data)
-    line_data = [float(x) for x in line_data]
-    if len(line_data) > 0:
-        print(line_data[0])
+split_data = data[1:2]
+
+dataInt2 = int.from_bytes(split_data, byteorder='big')
+
+print("dit is data: ")
+print(data)
+print("dit is dataInt: ")
+print(dataInt)
+print("dit is split_data: ")
+print(split_data)
+print("dit is dataInt2: ")
+print(dataInt2)
+#print(int(data, 0))
