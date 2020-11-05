@@ -9,6 +9,17 @@
 #ifndef INC_DEF_H_
 #define INC_DEF_H_
 
+/* DEFINES */
+
+// protocol
+#define DISTANCE_CODE 0x41
+#define LIGHT_CODE 0x4C
+#define SCREEN_OPEN 0x53
+#define SCREEN_CLOSED 0x52
+#define TEMP_CODE 0x54
+
+// 
+
 /* INCLUDES */
 
 // USART files
@@ -32,5 +43,11 @@
 /* FUNCTIONS */
 
 void init(void);
+
+void scheduler_tasks(void);
+
+void send_light(void);
+void send_temp(void);
+void send_distance(void);
 
 #endif /* INC_DEF_H_ */
