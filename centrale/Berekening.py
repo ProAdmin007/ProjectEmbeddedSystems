@@ -13,13 +13,13 @@ tmpList = []
 ser = serial.Serial('COM3', 9600,timeout=10)
 ser.read(2)
 
-#berekeing
+#berekeing - gaat uit van 5 volt op de sensor
 temperatureC = (5 - 0.5) * 100
 
 # Collecting the data from the serial port 
 while True: 
     line = ser.readline()
-    line_data = re.findall('\d*\.\d*',str(line))
+    line_data = re.findall('\d*\.\d*',str(line)) #haalt de nodige data uit de line en zet deze in line_data
     line_data = filter(None,line_data)
     line_data = [float(x) for x in line_data]
     if len(line_data) > 0:
