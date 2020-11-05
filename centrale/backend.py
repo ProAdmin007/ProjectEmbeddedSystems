@@ -1,24 +1,26 @@
 import json
 import os.path
 
-class main():
-    def __init__(self,filename):
-        self.data = openjson(self,filename)
+class Main():
+    def __init__(self,fileName):
+        self.data = self.openjson(fileName)
 
-    def filecheck(filename):
-        file = os.path.isfile(name)
-        if file:
-            open(name,"x")
+    def filecheck(self,fileName):
+        file = os.path.isfile(fileName)
+        if not file:
+            open(fileName,"x")
+            self.writejson(fileName,{"Kamers":[]})
             return False
         else:
             return True
         
-    def openjson(filename):
-        filecheck(filename)
-        with open(filename) as json_file:
+    def openjson(self,fileName):
+        self.filecheck(fileName)
+        with open(fileName) as json_file:
             return json.load(json_file)
     
-    def writejson(filename):
-        with open(filename, 'w') as outfile:
-            json.dump(data, outfile)
+    def writejson(self,fileName,jsonData):
+        with open(fileName, 'w') as outfile:
+            json.dump(jsonData, outfile)
     
+Main("test.json")
