@@ -23,6 +23,9 @@
 #include "./HCSR04/HCSR04_definitions.h"
 #include "./HCSR04/HCSR04_functions.h"
 
+// scheduler files
+#include "./scheduler/AVR_TTC_scheduler.h"
+
 #define F_CPU 16E6
 #include <util/delay.h>
 

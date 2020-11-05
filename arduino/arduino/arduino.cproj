@@ -192,6 +192,7 @@
     <Folder Include="src\config\" />
     <Folder Include="src\analog" />
     <Folder Include="src\HCSR04" />
+    <Folder Include="src\scheduler" />
     <Folder Include="src\USART" />
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +215,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\analog\analog.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\scheduler\AVR_TTC_scheduler.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\scheduler\AVR_TTC_scheduler.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\USART\USART_definitions.h">
