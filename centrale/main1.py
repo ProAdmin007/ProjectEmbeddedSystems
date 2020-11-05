@@ -1,4 +1,5 @@
 import tkinter as tk
+import backend
 
 #default usage for all pages
 class Page(tk.Frame):
@@ -46,27 +47,26 @@ class Homepage(Page):
 class AddRoom(Page):
     def __init__(self, *args, **kwargs):
         Page.__init__(self, *args, **kwargs)
+        # add frame around all the coponents
         frame = tk.LabelFrame(self, padx=5, pady=5)
         frame.grid(row= 0, column = 0, padx=5, pady=5,)
-
+        #all the modules for the layout
         label = tk.Label(frame, text="kamer toevoegen")
         labelname = tk.Label(frame, text="Naam:")
         add = tk.Button(frame,text="Toevoegen",width=25,command= None)
         back = tk.Button(frame,text="Annuleren",width=25,command=self.master.showroom("homepage"))
         inputbox = tk.Entry(frame)
-
+        #added a font and biger size for the label on the top
         label.config(font=("Courier", 30))
-
-        label.grid(row=0,columnspan = 10)
+        #adding all the modules to the grid
+        label.grid(row=0,columnspan = 10)   #span == future updates
         inputbox.grid(row=1, column=1)
         labelname.grid(row=1,column=0)
         add.grid(row=2,column=0)
         back.grid(row=2,column=1)
-
+        #center the window
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
-
-        
 
 class MainView(tk.Frame):
     def __init__(self, *args, **kwargs):
