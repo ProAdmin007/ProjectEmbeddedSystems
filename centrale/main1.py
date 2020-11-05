@@ -9,45 +9,64 @@ class Page(tk.Frame):
 
 #First page of the program
 class Homepage(Page):
-   def __init__(self, *args, **kwargs):
-       Page.__init__(self, *args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        Page.__init__(self, *args, **kwargs)
 
-       lframe = tk.LabelFrame(self, padx=5, pady=5)
-       rframe = tk.LabelFrame(self, padx=5, pady=5)
-       lframe.grid(row= 0, column = 0, padx=5, pady=5)
-       rframe.grid(row= 0, column = 1, padx=5, pady=5, rowspan = 10)
+        lframe = tk.LabelFrame(self, padx=5, pady=5)
+        rframe = tk.LabelFrame(self, padx=5, pady=5)
+        lframe.grid(row= 0, column = 0, padx=5, pady=5)
+        rframe.grid(row= 0, column = 1, padx=5, pady=5, rowspan = 10)
 
-       # rightside text label
-       welcome = tk.Label(rframe, wraplength = 150,height=36,width=80, text = "balkbalssjhdgfsajd gfasjdfg sajdhfgasdkjhf gasdjhf gaskdlfjg askldfgaskldjf hasjkdfh")
-       #list for the rooms
-       rooms = tk.Label(lframe, text = "Kamers")
-       add = tk.Button(lframe, text = "  +  ", command = lambda: self.master.showroom('addroom'),width=7)           #word pop-up ipv framelayer
-       remove = tk.Button(lframe, text = "  -  ", command = lambda: self.master.showroom('removeroom'),width=7)     #word pop-up ipv framelayer
+        # add the modules that are used in the homepage
+        welcome = tk.Label(rframe, wraplength = 150,height=36,width=80, text = "balkbalssjhdgfsajd gfasjdfg sajdhfgasdkjhf gasdjhf gaskdlfjg askldfgaskldjf hasjkdfh")
+        rooms = tk.Label(lframe, text = "Kamers")
+        add = tk.Button(lframe, text = "  +  ", command = lambda: self.master.showroom('addroom'),width=7)           #word pop-up ipv framelayer
+        remove = tk.Button(lframe, text = "  -  ", command = lambda: self.master.showroom('removeroom'),width=7)     #word pop-up ipv framelayer
+        listbox = tk.Listbox(lframe,height=30)
+        scrollbar = tk.Scrollbar(lframe)
+        
+        #################test for listbox##########################
+        for values in range(100):                           
+            listbox.insert(tk.END, values)
+        ########################################################### 
 
+        listbox.config(yscrollcommand = scrollbar.set)
+        scrollbar.config(command = listbox.yview) 
 
-       listbox = tk.Listbox(lframe,height=30)
-       for values in range(100):                           #placeholder "list"
-           listbox.insert(tk.END, values) 
-       scrollbar = tk.Scrollbar(lframe,)
-
-       listbox.config(yscrollcommand = scrollbar.set)
-       scrollbar.config(command = listbox.yview) 
-
-       welcome.pack(expand="true")
-       #building the grid`s for all the modules
-       rooms.grid(row = 0, column = 0)
-       listbox.grid(row = 1, column = 0, padx = 5, pady =5)
-       scrollbar.grid(row = 1, column = 1,sticky="NS") # sticky NS so he can streatch the whole grid. otherwise it would be  a small scrollbar :)
-       add.grid(row = 2, column = 0, padx = 0, pady = 5,sticky="W")
-       remove.grid(row = 2, column = 0, padx = 0, pady = 5,sticky="E")
+        welcome.pack(expand="true")
+        #building the grid`s for all the modules
+        rooms.grid(row = 0, column = 0)
+        listbox.grid(row = 1, column = 0, padx = 5, pady =5)
+        scrollbar.grid(row = 1, column = 1,sticky="NS") # sticky NS so he can streatch the whole grid. otherwise it would be  a small scrollbar :)
+        add.grid(row = 2, column = 0, padx = 0, pady = 5,sticky="W")
+        remove.grid(row = 2, column = 0, padx = 0, pady = 5,sticky="E")
 
 
 #placeholder for second page
 class AddRoom(Page):
-   def __init__(self, *args, **kwargs):
-       Page.__init__(self, *args, **kwargs)
-       label = tk.Label(self, text="This is page 2")
-       label.pack(side="top", fill="both", expand=True)
+    def __init__(self, *args, **kwargs):
+        Page.__init__(self, *args, **kwargs)
+        frame = tk.LabelFrame(self, padx=5, pady=5)
+        frame.grid(row= 0, column = 0, padx=5, pady=5,)
+
+        label = tk.Label(frame, text="kamer toevoegen")
+        labelname = tk.Label(frame, text="Naam:")
+        add = tk.Button(frame,text="Toevoegen",width=25,command= None)
+        back = tk.Button(frame,text="Annuleren",width=25,command=self.master.showroom("homepage"))
+        inputbox = tk.Entry(frame)
+
+        label.config(font=("Courier", 30))
+
+        label.grid(row=0,columnspan = 10)
+        inputbox.grid(row=1, column=1)
+        labelname.grid(row=1,column=0)
+        add.grid(row=2,column=0)
+        back.grid(row=2,column=1)
+
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+
+        
 
 class MainView(tk.Frame):
     def __init__(self, *args, **kwargs):
