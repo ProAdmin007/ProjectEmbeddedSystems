@@ -44,4 +44,9 @@ while i == 100: # Infenet loop
         print(bit4)
         tempData = bit4[1:3]
         print(tempData)
-        print(int.from_bytes(tempData, byteorder='big'))
+        tempDataInt = int.from_bytes(tempData, byteorder='big')
+        print(tempDataInt)
+        # Berekening naar tempC
+        voltageOut = (tempDataInt * 5000) / 1024
+        temperatureC = voltageOut / 10
+        print("TEMP IS ------- ", temperatureC)
