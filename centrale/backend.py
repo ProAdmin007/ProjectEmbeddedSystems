@@ -31,10 +31,15 @@ class Data():
         self.data = self.openjson()
         return self.data
 
-# test =Data ("config.json","Kamers")
-# jsonator = {}
-# jsonator["Kamers"] = {}
-# testdata = test.getjson()["Kamers"]
+test =Data ("config.json","Kamers")
+testdata = test.getjson()
+testdata["Kamers"]["kamernummer4"] = {"com":[]}
+testdata["Kamers"]["kamernummer7"] = {"com":[]}
+testdata["Kamers"]["kamernummer1"] = {"com":[]}
+print(testdata)
+test.writejson(testdata)
+
+
 # eerste = testdata["kamer1"] = {}
 # tweede = testdata["kamer2"] = {}
 # eerste["naam"] = "kamernaam1"
