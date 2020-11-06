@@ -54,8 +54,8 @@ void init(){
 }
 
 void scheduler_tasks(){
-	//SCH_Add_Task(set_light_bool, 0, 15);
-	//SCH_Add_Task(set_temp_bool, 5, 15);
+	SCH_Add_Task(set_light_bool, 0, 15);
+	SCH_Add_Task(set_temp_bool, 5, 15);
 	SCH_Add_Task(set_distance_bool, 10, 15);
 }
 

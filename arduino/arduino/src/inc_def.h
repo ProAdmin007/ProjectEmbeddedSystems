@@ -18,8 +18,6 @@
 #define SCREEN_CLOSED 0x52
 #define TEMP_CODE 0x54
 
-// 
-
 /* INCLUDES */
 
 // USART files
