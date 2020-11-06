@@ -13,7 +13,7 @@ class Data():
         print(file)
         if not file:
             open(self.fileName,"x")
-            self.writejson({self.dirname:[]})
+            self.writejson({self.dirname:{}})
             return False
         else:
             return True
@@ -27,16 +27,20 @@ class Data():
         with open(self.fileName, 'w') as outfile:
             json.dump(jsonData, outfile)
     
-    def getjson():
+    def getjson(self):
+        self.data = self.openjson()
         return self.data
-    
-    def addjson(item,data):
-        for i in self.data[self.dirname]:
-            if i[item] == data[item]:
-                i = data
-                return True
-        return false
 
-
-
-Data("config.json","Kamers")
+# test =Data ("config.json","Kamers")
+# jsonator = {}
+# jsonator["Kamers"] = {}
+# testdata = test.getjson()["Kamers"]
+# eerste = testdata["kamer1"] = {}
+# tweede = testdata["kamer2"] = {}
+# eerste["naam"] = "kamernaam1"
+# tweede["naam"] = "kamernaam2"
+# eerste["schermen"] = ["com1","com2"]
+# tweede["schermen"] = ["com3","com4"]
+# jsonator["Kamers"] = [eerste]
+# jsonator["Kamers"] += [tweede]
+# test.writejson(jsonator)

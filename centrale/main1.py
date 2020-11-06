@@ -17,6 +17,7 @@ class Homepage(Page):
         rframe = tk.LabelFrame(self, padx=5, pady=5)
         lframe.grid(row= 0, column = 0, padx=5, pady=5)
         rframe.grid(row= 0, column = 1, padx=5, pady=5, rowspan = 10)
+        datastore = self.master.getdata().getjson()
 
         # add the modules that are used in the homepage
         welcome = tk.Label(rframe, wraplength = 150,height=36,width=80, text = "balkbalssjhdgfsajd gfasjdfg sajdhfgasdkjhf gasdjhf gaskdlfjg askldfgaskldjf hasjkdfh")
@@ -27,8 +28,8 @@ class Homepage(Page):
         scrollbar = tk.Scrollbar(lframe)
         
         #################test for listbox##########################
-        for values in range(100):                           
-            listbox.insert(tk.END, values)
+        for values in datastore["Kamers"]:                           
+            listbox.insert(tk.END, values["naam"])
         ########################################################### 
 
         listbox.config(yscrollcommand = scrollbar.set)
@@ -72,9 +73,11 @@ class MainView(tk.Frame):
     def __init__(self, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
         self.rooms = dict()
+        self.data = backend.Data("config.json","Kamers")
+        self.datastore = self.data.getjson()
+
         self.rooms['homepage'] = Homepage(self) #call homepage
         self.rooms['addroom'] = AddRoom(self)    #Add a room page
-        print(self.rooms)
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
 
@@ -86,7 +89,8 @@ class MainView(tk.Frame):
 
     def showroom(self, room):
         self.rooms[room].show()
-
+    def getdata(self):
+        return self.data
 
 # init for the tkinter screen
 if __name__ == "__main__":
