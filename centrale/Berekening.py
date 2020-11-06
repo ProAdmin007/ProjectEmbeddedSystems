@@ -48,5 +48,5 @@ while i == 100: # Infenet loop
         print(tempDataInt)
         # Berekening naar tempC
         voltageOut = (tempDataInt * 5000) / 1024
-        temperatureC = voltageOut / 10
+        temperatureC = round((voltageOut / 10) * 6)
         print("TEMP IS ------- ", temperatureC)
