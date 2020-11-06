@@ -19,17 +19,19 @@ class Homepage(Page):
         lframe.grid(row= 0, column = 0, padx=5, pady=5)
         rframe.grid(row= 0, column = 1, padx=5, pady=5, rowspan = 10)
         self.datastore = self.master.getdata()
+        self.toggle = False
 
         # add the modules that are used in the homepage
         welcome = tk.Label(rframe, wraplength = 150,height=36,width=80, text = "Welkom!")
         rooms = tk.Label(lframe, text = "Kamers")
         add = tk.Button(lframe, text = "  +  ", command = lambda: self.master.showroom('addroom'),width=7)           #word pop-up ipv framelayer
-        remove = tk.Button(lframe, text = "  -  ", command = lambda: self.master.showroom('removeroom'),width=7)     #word pop-up ipv framelayer
+        remove = tk.Button(lframe, text = "  -  ", command = lambda: self.removeRoom(),width=7)     #word pop-up ipv framelayer
         self.listbox = tk.Listbox(lframe,height=30)
         scrollbar = tk.Scrollbar(lframe)
         self.updatelist()
         self.listbox.config(yscrollcommand = scrollbar.set)
-        scrollbar.config(command = self.listbox.yview) 
+        self.listbox.bind('<<ListboxSelect>>',self.selector())
+        scrollbar.config(command = self.listbox.yview)
 
         welcome.pack(expand="true")
         #building the grid`s for all the modules
@@ -39,10 +41,30 @@ class Homepage(Page):
         add.grid(row = 2, column = 0, padx = 0, pady = 5,sticky="W")
         remove.grid(row = 2, column = 0, padx = 0, pady = 5,sticky="E")
 
+
+
     def updatelist(self):
         self.listbox.delete(0,'end')
         for values in self.datastore.getjson()["Kamers"]:                           
             self.listbox.insert(tk.END, values)
+    
+    def removeRoom(self):
+        if self.toggle == False:
+            self.toggle = True
+            self.listbox.config(foreground="red")
+            self.listbox.bind('<<ListboxSelect>>',self.selector())
+        else:
+            self.toggle = False
+            self.listbox.config(foreground="black")
+    def selector(self):
+        if self.toggle:
+            print("hi")
+        else:
+            print("sad")
+            
+
+
+
 
 
 #placeholder for second page
