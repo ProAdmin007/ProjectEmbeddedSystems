@@ -16,7 +16,7 @@ distance_cm = (time_ms / 58) * 1000
 #define F_CPU				16E6
 #define MYUBRR				103
 
-#define ECHO_PIN			PIND3		// INT0
+#define ECHO_PIN			PIND3		// INT1
 #define TRIGGER_PIN			PINB0		// Arduino PIN 8
 
 #include <asf.h>
@@ -33,9 +33,9 @@ int main(void){
 	HCSR04_init_pins();				// initialize HCSR04 pins
 	HCSR04_counter_init();			// initialize HCSR04 counter
 	
-	interrupts_init();				// initialize interrupts
+	//interrupts_init();				// initialize interrupts
 	USART_Init(MYUBRR);				// initialize USART
-	
+	USART_Transmit(0x69);
 	echorecv = 0;					// clear echo received variable
 	
 	while(1){						// main loop
@@ -45,17 +45,26 @@ int main(void){
 
 void HCSR04_get_distance(){
 	HCSR04_send_pulse();			// send a pulse
-	while(echorecv != 1);			// wait for the echo to be sent back
-	USART_Transmit(counter_h);		// send high counter bits
-	USART_Transmit(counter_l);		// send low counter bits
+	while(ECHO_PIN != 1);			// wait for the echo to be sent back
+	
+	TCNT1 = 0x0000;					// clear counter
+	TCCR1B = (1<<CS11);				// enable counter
+	
+	while(ECHO_PIN != 0);			// wait for pulse to end
+	
+	TCCR1B = 0x00;					// stop the counter
+	
+	USART_Transmit(TCNT1H);			// send high counter bits
+	USART_Transmit(TCNT1L);			// send low counter bits
 	_delay_ms(500);					// 500ms delay until the next pulse. not really needed tho
 }
 
+/*
 void interrupts_init(){
 	sei();							// enable global interrupt flag
 	EICRA = (0<<ISC11)|(1<<ISC10);	// set the external interrupt to trigger any logical change
 	EIMSK = (1<<INT1);				// enable external interrupt on INT1
-}
+}*/
 
 // pulls the trigger high for 15 ms, making the HCSR04 send a pulse
 void HCSR04_send_pulse(){
@@ -80,7 +89,7 @@ void HCSR04_counter_init(){
 	TCCR1B = 0x00;				// no need to enable any additional options, standard is fine
 	TCCR1C = 0x00;				// timer is also disabled until the ISR is triggered
 }
-
+/*
 // triggers on a logical change on INT1
 ISR (INT1_vect){
 	if (TCCR1B == 0x00){		// check if timer is disabled
@@ -109,7 +118,7 @@ ISR (INT1_vect){
 		echorecv = 1;			// set echo received flag high
 		return;					// exit the ISR
 	}
-}
+}*/
 
 void USART_Init(unsigned int ubrr){
 	// set baud rate

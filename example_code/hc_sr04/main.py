@@ -14,6 +14,7 @@ HOW TO USE:
 
 import serial
 import sys
+from datetime import datetime
 
 if len(sys.argv) == 1:
 	raise Exception('\n\nNo arguments given for comport. Read main.py for more information.')
@@ -23,15 +24,13 @@ timeout = 2
 port = 'COM{}'.format(sys.argv[1])
 
 def read(bytes_nr=1):
-	with serial.Serial(port, BAUD, timeout=timeout) as ser:
+	with serial.Serial(port, BAUD, timeout=15) as ser:
 		while True:
 			data_hex = ser.read(bytes_nr).hex()
-			data_nr = str(data_hex)
+			timestr = datetime.now().strftime('%H:%M:%S')
 
-			if data_nr == '':
-				data_nr = '0'
-			data_nr = int(data_nr, 16)
-			print('0x{} - {} - {} cm'.format(data_hex, data_nr, cm_distance(data_hex)))
+			print('{} - 0x{}'.format(timestr, data_hex))
+
 
 def cm_distance(counter_value):
 	ms_elapsed = (int(counter_value, 16)*1000) / 2000

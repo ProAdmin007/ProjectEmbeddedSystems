@@ -50,4 +50,8 @@ void send_light(void);
 void send_temp(void);
 void send_distance(void);
 
+void set_light_bool(void);
+void set_temp_bool(void);
+void set_distance_bool(void);
+
 #endif /* INC_DEF_H_ */
