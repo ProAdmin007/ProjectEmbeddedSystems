@@ -160,7 +160,7 @@ void check_command(){
 			screen_open();
 			screen_state = SCREEN_OPEN;
 		}
-		if(command == SCREEN_CLOSED&(screen_state == SCREEN_OPEN))){
+		if((command == SCREEN_CLOSED)&(screen_state == SCREEN_OPEN)){
 			screen_close();
 			screen_state = SCREEN_CLOSED;
 		}
