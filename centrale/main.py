@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import backend
+import serial.tools.list_ports
 
 
 class Page(tk.Frame):
@@ -110,8 +111,6 @@ class AddRoom(Page):
             self.data.writejson(datajson)
             self.master.showroom("homepage")
 
-# default usage for all pages
-
 
 class RoomMenu(Page):
     def __init__(self, *args, **kwargs):
@@ -122,11 +121,12 @@ class RoomMenu(Page):
         rframe.grid(row=0, column=1, padx=5, pady=5, rowspan=10)
         self.datastore = self.master.getdata()
         self.toggle = False
+        self.room = ""
         # add the modules that are used in the homepage
         welcome = tk.Label(rframe, wraplength=150, height=36, width=80, text="Selecteer een sensor aan de linker kant om data te zien")
         rooms = tk.Label(lframe, text="Schermen")
-        add = tk.Button(lframe, text="  +  ", command=lambda: self.master.showroom('addscreen'), width=7)           # word pop-up ipv framelayer
-        remove = tk.Button(lframe, text="  -  ", command=lambda: self.removesensor(), width=7)     # word pop-up ipv framelayer
+        add = tk.Button(lframe, text="  +  ", command=lambda: self.master.showroom('addsensor'), width=7)           # word pop-up ipv framelayer
+        remove = tk.Button(lframe, text="  -  ", command=lambda: self.removeSensor(), width=7)     # word pop-up ipv framelayer
         self.listbox = tk.Listbox(lframe, height=30)
         scrollbar = tk.Scrollbar(lframe)
 
@@ -148,8 +148,9 @@ class RoomMenu(Page):
 
     def updatelist(self):
         self.listbox.delete(0, 'end')
-        for values in self.datastore.getjson()["Kamers"]:
-            self.listbox.insert(tk.END, values)
+        if not self.room == "":
+            for v in self.datastore.getjson()["Kamers"][self.room]["Scherm"]:
+                self.listbox.insert(tk.END, v)
 
     def removeSensor(self):
         if not self.toggle:
@@ -161,6 +162,7 @@ class RoomMenu(Page):
 
     def selector(self, event):
         item = self.listbox.get(self.listbox.curselection())
+        print(self.room)
         if self.toggle:
             message = messagebox.askquestion(title="Weet u het zeker?", message="Wilt u de sensor "+item+" Verwijderen?")
             if message == "yes":
@@ -173,6 +175,64 @@ class RoomMenu(Page):
                         break
         else:
             self.sensor = item
+    
+    def updateroom(self):
+        self.room = self.master.getselectedroom()
+
+
+class Addsensor(Page):
+    def __init__(self, *args, **kwargs):
+        Page.__init__(self, *args, **kwargs)
+        self.data = self.master.getdata()
+        self.listport = ["Niks gevonden"]
+
+        # add frame around all the coponents
+        frame = tk.LabelFrame(self, padx=5, pady=5)
+        frame.grid(row=0, column=0, padx=5, pady=5,)
+
+        # dropdown menu
+        comport = tk.StringVar()
+        comport.set(self.listport[0])
+        dropdown = tk.OptionMenu(frame,comport,self.listport)
+        # all the modules for the layout
+        label = tk.Label(frame, text="Scherm toevoegen")
+        labelname = tk.Label(frame, text="Naam:")
+        labelcom = tk.Label(frame, text="Scherm:")
+        inputbox = tk.Entry(frame)
+        add = tk.Button(frame, text="Toevoegen", width=25, command=lambda: self.addSensorJson(inputbox.get(),comport.get()))
+        back = tk.Button(frame, text="Annuleren", width=25, command=lambda: self.master.showroom("homepage"))
+        # added a font and biger size for the label on the top
+        label.config(font=("Courier", 30))
+
+        # adding all the modules to the grid
+        label.grid(row=0, columnspan=10)
+        inputbox.grid(row=1, column=1)
+        labelname.grid(row=1, column=0)
+        labelcom.grid(row=2, column=0)
+        dropdown.grid(row=2, column=1)
+        add.grid(row=3, column=0)
+        back.grid(row=3, column=1)
+
+        # center the window
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+
+    def addSensorJson(self, name, comport):
+        datajson = self.data.getjson()
+        if name in datajson["Kamers"][self.master.room()]["scherm"]:
+            messagebox.showerror(title="Scherm toevoegen", message="Deze is al in gebruik")
+        else:
+            datajson["Kamers"][self.master.room()]["Scherm"][name] = comport
+            self.data.writejson(datajson)
+            self.master.showroom("homepage")
+    def updatecoms(self):
+        self.listport = serial.tools.list_ports.comports()
+        if self.listport == []:
+            self.listport.append("niet gevonden")
+            messagebox.showerror(title="Geen schermen gevonden", message="Er zijn geen schermen aangesloten")
+
+        
+        
 
 
 class MainView(tk.Frame):
@@ -186,6 +246,7 @@ class MainView(tk.Frame):
         self.rooms['homepage'] = Homepage(self)  # call homepage
         self.rooms['addroom'] = AddRoom(self)    # Add a room page
         self.rooms['roommenu'] = RoomMenu(self)  # Add the room page for sensors
+        self.rooms['addsensor'] = Addsensor(self)
 
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
@@ -198,6 +259,11 @@ class MainView(tk.Frame):
     def showroom(self, room):
         if room == "homepage":
             self.rooms[room].updatelist()
+        if room == "roommenu":
+            self.rooms[room].updateroom()
+            self.rooms[room].updatelist()
+        if room == "addsensor":
+            self.rooms[room].updatecoms()
         self.rooms[room].show()
 
     def getdata(self):
