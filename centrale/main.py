@@ -167,9 +167,9 @@ class RoomMenu(Page):
             message = messagebox.askquestion(title="Weet u het zeker?", message="Wilt u de sensor "+item+" Verwijderen?")
             if message == "yes":
                 data = self.datastore.getjson()
-                for i in data["Kamers"]:
+                for i in data["Kamers"][self.room]["Scherm"]:
                     if item == i:
-                        data["Kamers"].pop(item)
+                        data["Kamers"][self.room]["Scherm"].pop(item)
                         self.datastore.writejson(data)
                         self.updatelist()
                         break
@@ -184,6 +184,7 @@ class Addsensor(Page):
     def __init__(self, *args, **kwargs):
         Page.__init__(self, *args, **kwargs)
         self.data = self.master.getdata()
+        self.room = "none"
         self.listport = ["Niks gevonden"]
 
         # add frame around all the coponents
@@ -200,7 +201,7 @@ class Addsensor(Page):
         labelcom = tk.Label(frame, text="Scherm:")
         inputbox = tk.Entry(frame)
         add = tk.Button(frame, text="Toevoegen", width=25, command=lambda: self.addSensorJson(inputbox.get(),comport.get()))
-        back = tk.Button(frame, text="Annuleren", width=25, command=lambda: self.master.showroom("homepage"))
+        back = tk.Button(frame, text="Annuleren", width=25, command=lambda: self.master.showroom("roommenu"))
         # added a font and biger size for the label on the top
         label.config(font=("Courier", 30))
 
@@ -219,13 +220,15 @@ class Addsensor(Page):
 
     def addSensorJson(self, name, comport):
         datajson = self.data.getjson()
-        if name in datajson["Kamers"][self.master.room()]["scherm"]:
+        datajson["Kamers"][self.room]["Scherm"][name] = "test"
+        if name in datajson["Kamers"]:
             messagebox.showerror(title="Scherm toevoegen", message="Deze is al in gebruik")
         else:
-            datajson["Kamers"][self.master.room()]["Scherm"][name] = comport
+            datajson["Kamers"][self.room]["Scherm"][name] = comport
             self.data.writejson(datajson)
-            self.master.showroom("homepage")
+            self.master.showroom("roommenu")
     def updatecoms(self):
+        self.room= self.master.getselectedroom()
         self.listport = serial.tools.list_ports.comports()
         if self.listport == []:
             self.listport.append("niet gevonden")
