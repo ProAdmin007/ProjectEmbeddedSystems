@@ -59,7 +59,7 @@ class Homepage(Page):
             self.listbox.config(foreground="black")
 
     def selector(self, event):
-        print(event)
+        print(self.listbox.get(self.listbox.curselection()))
 
 
 #placeholder for second page
