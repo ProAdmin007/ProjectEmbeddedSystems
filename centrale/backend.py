@@ -4,13 +4,11 @@ import os.path
 class Data():
     def __init__(self,fileName,dirName):
         self.fileName = fileName
-        print(self.fileName)
         self.dirname = dirName
         self.data = self.openjson()
 
     def filecheck(self):
         file = os.path.isfile(self.fileName)
-        print(file)
         if not file:
             open(self.fileName,"x")
             self.writejson({self.dirname:{}})
@@ -31,13 +29,13 @@ class Data():
         self.data = self.openjson()
         return self.data
 
-test =Data ("config.json","Kamers")
-testdata = test.getjson()
-testdata["Kamers"]["kamernummer4"] = {"com":[]}
-testdata["Kamers"]["kamernummer7"] = {"com":[]}
-testdata["Kamers"]["kamernummer1"] = {"com":[]}
-print(testdata)
-test.writejson(testdata)
+# test =Data ("config.json","Kamers")
+# testdata = test.getjson()
+# testdata["Kamers"]["kamernummer4"] = {"com":[]}
+# testdata["Kamers"]["kamernummer7"] = {"com":[]}
+# testdata["Kamers"]["kamernummer1"] = {"com":[]}
+# print(testdata)
+# test.writejson(testdata)
 
 
 # eerste = testdata["kamer1"] = {}
