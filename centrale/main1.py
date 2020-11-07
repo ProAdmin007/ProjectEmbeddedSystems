@@ -42,8 +42,6 @@ class Homepage(Page):
         add.grid(row = 2, column = 0, padx = 0, pady = 5,sticky="W")
         remove.grid(row = 2, column = 0, padx = 0, pady = 5,sticky="E")
 
-
-
     def updatelist(self):
         self.listbox.delete(0,'end')
         for values in self.datastore.getjson()["Kamers"]:                           
@@ -69,13 +67,12 @@ class Homepage(Page):
                     self.updatelist()
                     break
 
-
 #placeholder for second page
 class AddRoom(Page):
     def __init__(self, *args, **kwargs):
         Page.__init__(self, *args, **kwargs)
         self.data = self.master.getdata()
-
+        
         # add frame around all the coponents
         frame = tk.LabelFrame(self, padx=5, pady=5)
         frame.grid(row= 0, column = 0, padx=5, pady=5,)
@@ -108,6 +105,17 @@ class AddRoom(Page):
             self.data.writejson(datajson)
             self.master.showroom("homepage")
 
+class RoomMenu(Page):
+    def __init__(self, *args, **kwargs):
+        Page.__init__(self, *args, **kwargs)
+        lframe = tk.LabelFrame(self, padx=5, pady=5)
+        rframe = tk.LabelFrame(self, padx=5, pady=5)
+        lframe.grid(row= 0, column = 0, padx=5, pady=5)
+        rframe.grid(row= 0, column = 1, padx=5, pady=5, rowspan = 10)
+        self.datastore = self.master.getdata()
+
+
+
 class MainView(tk.Frame):
     def __init__(self, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
@@ -116,12 +124,13 @@ class MainView(tk.Frame):
         self.datastore = self.data.getjson()
 
         self.rooms['homepage'] = Homepage(self) #call homepage
-        self.rooms['addroom'] = AddRoom(self)    #Add a room page
+        self.rooms['addroom'] = AddRoom(self)   #Add a room page
+        self.rooms['roommenu'] = RoomMenu(self) #Add the room page for sensors
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
 
-        self.rooms['homepage'].place(in_=container, x=0, y=0, relwidth=1, relheight=1)
-        self.rooms['addroom'].place(in_=container, x=0, y=0, relwidth=1, relheight=1)
+        for i in self.rooms:
+            self.rooms[i].place(in_=container, x=0,y=0, relwidth=1, relheight=1)
         #als je hier een button maakt kan ik wel switchen tussen de pages.
 
         self.rooms['homepage'].show()       #show homepage first
