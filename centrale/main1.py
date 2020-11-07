@@ -53,13 +53,21 @@ class Homepage(Page):
         if self.toggle == False:
             self.toggle = True
             self.listbox.config(foreground="red")
-
         else:
             self.toggle = False
             self.listbox.config(foreground="black")
 
     def selector(self, event):
-        print(self.listbox.get(self.listbox.curselection()))
+        item = self.listbox.get(self.listbox.curselection())
+        message = messagebox.askquestion(title="Weet u het zeker?",message="Wilt u de kamer "+item+" Verwijderen?")
+        if message == "yes":
+            data = self.datastore.getjson()
+            for i in data["Kamers"]:
+                if item == i:
+                    data["Kamers"].pop(item)
+                    self.datastore.writejson(data)
+                    self.updatelist()
+                    break
 
 
 #placeholder for second page
