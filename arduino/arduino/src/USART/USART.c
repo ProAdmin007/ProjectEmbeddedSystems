@@ -19,6 +19,21 @@ void USART_transmit(unsigned char data){
 	UDR0 = data;
 }
 
+uint8_t USART_unread_data(){
+	// check if RXC0 is set, aka
+	// is there unread data
+	if((UCSR0A >> RXC0)&1){
+		return 1;
+	}
+	return 0;
+}
+
+unsigned char USART_receive(){
+	// Wait for data to be received
+	while (!(UCSR0A & (1<<RXC0)));
+	// Get and return received data from buffer
+	return UDR0;
+}
 
 // example code for initializing a connection and sending data
 /*int main(void){

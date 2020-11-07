@@ -20,6 +20,10 @@
 
 /* INCLUDES */
 
+// lights files
+#include "./lights/lights_definitions.h"
+#include "./lights/lights_functions.h"
+
 // USART files
 #include "./USART/USART_definitions.h"
 #include "./USART/USART_functions.h"
@@ -51,5 +55,10 @@ void send_distance(void);
 void set_light_bool(void);
 void set_temp_bool(void);
 void set_distance_bool(void);
+
+void screen_open(char);
+void screen_close(char);
+
+void check_command(void);
 
 #endif /* INC_DEF_H_ */

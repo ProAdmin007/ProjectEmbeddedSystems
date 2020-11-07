@@ -10,5 +10,7 @@
 
 void USART_init(unsigned int);
 void USART_transmit(unsigned char);
+unsigned char USART_receive(void);
+uint8_t USART_unread_data(void);
 
 #endif /* USART_FUNCTIONS_H_ */

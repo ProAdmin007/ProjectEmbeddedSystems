@@ -25,25 +25,10 @@ distance_cm = (time_ms / 58) * 1000
 volatile char counter;
 volatile int echorecv = 0;
 
-unsigned int distance_time;
-void adsf(void){
-	DDRD |= (1<<PIND4) | (1<<PIND5) | (1<<PIND6);
-	PORTD |= (1<<PIND4) | (1<<PIND5) | (1<<PIND6);
-}
 char HCSR04_get_distance(){
 	HCSR04_send_pulse();			// send a pulse
 	while(echorecv != 1);			// wait for the echo to be sent back
-
-	return counter;
-// 	HCSR04_send_pulse();				// send a pulse
-// 	while(echorecv != 1);				// wait for the echo to be sent back
-// 	
-// 	unsigned int distance = 0x00;		// clear distance int
-// 
-// 	distance |= (counter_h<<8);			// set higher byte of distance int
-// 	distance |= (counter_l);			// set lower byte
-// 	
-// 	return distance_time;
+	return counter;					// return the counter value
 }
 
 void HCSR04_interrupts_init(){
@@ -60,10 +45,8 @@ void HCSR04_send_pulse(){
 
 // initialize the HCSR04 pins
 void HCSR04_init_pins(){
-	// laag = input
-	// hoog = output
-	DDRD |= (0<<ECHO_PIN);		// PIND3 -> INT1
-	DDRB |= (1<<TRIGGER_PIN);	// PINB0
+	DDRD |= (0<<ECHO_PIN);
+	DDRB |= (1<<TRIGGER_PIN);
 }
 
 // initialize the clock for the HC-SR04
@@ -83,9 +66,9 @@ ISR (INT1_vect){
 		
 		counter = 0x00;			// clear counter
 		
-		TCCR0B = (1<<CS02);		// enable timer, with a pre-scaler of 8. 
+		TCCR0B = (1<<CS02);		// enable timer, with a pre-scaler of 256. 
 								// the pre-scaler prevents the timer from overflowing 
-								// if there is nothing in front of the sensor
+								//	 if there is nothing in front of the sensor
 		return;					// exit the ISR
 	}
 	if (TCCR0B == (1<<CS02)){	// check if the timer is enabled
