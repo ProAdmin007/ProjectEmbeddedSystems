@@ -56,8 +56,8 @@ void set_light_bool(void);
 void set_temp_bool(void);
 void set_distance_bool(void);
 
-void screen_open(char);
-void screen_close(char);
+void screen_open(void);
+void screen_close(void);
 
 void check_command(void);
 
