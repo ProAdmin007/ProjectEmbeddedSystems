@@ -30,8 +30,6 @@ int main (void){
 	}
 }
 
-
-
 void init(){
 	// enable global interrupts
 	sei();
@@ -120,7 +118,7 @@ in the state it should be in, than
 the function does nothing.
 ----------------------------------*/
 
-void screen_open(char screen_state){
+void screen_open(){
 	if(screen_state != SCREEN_OPEN){
 		while(HCSR04_get_distance() > 0x12){
 			lights_busy();
@@ -129,7 +127,7 @@ void screen_open(char screen_state){
 	}
 }
 
-void screen_close(char screen_state){
+void screen_close(){
 	if(screen_state != SCREEN_CLOSED){
 		while(HCSR04_get_distance() < 0x4A){
 			lights_busy();
@@ -158,12 +156,12 @@ void check_command(){
 	if(USART_unread_data() == 1){
 		char command = USART_receive();
 
-		if(command == SCREEN_OPEN){
-			screen_open(screen_state);
+		if((command == SCREEN_OPEN)&(screen_state == SCREEN_CLOSED)){
+			screen_open();
 			screen_state = SCREEN_OPEN;
 		}
-		if(command == SCREEN_CLOSED){
-			screen_close(screen_state);
+		if(command == SCREEN_CLOSED&(screen_state == SCREEN_OPEN))){
+			screen_close();
 			screen_state = SCREEN_CLOSED;
 		}
 	}
