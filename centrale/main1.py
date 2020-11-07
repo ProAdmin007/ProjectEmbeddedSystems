@@ -30,7 +30,8 @@ class Homepage(Page):
         scrollbar = tk.Scrollbar(lframe)
         self.updatelist()
         self.listbox.config(yscrollcommand = scrollbar.set)
-        self.listbox.bind('<<ListboxSelect>>',self.selector())
+        self.listbox.event_generate('<<ListBoxSelect>>')
+        self.listbox.bind('<<ListboxSelect>>', self.selector)
         scrollbar.config(command = self.listbox.yview)
 
         welcome.pack(expand="true")
@@ -52,19 +53,13 @@ class Homepage(Page):
         if self.toggle == False:
             self.toggle = True
             self.listbox.config(foreground="red")
-            self.listbox.bind('<<ListboxSelect>>',self.selector())
+
         else:
             self.toggle = False
             self.listbox.config(foreground="black")
-    def selector(self):
-        if self.toggle:
-            print("hi")
-        else:
-            print("sad")
-            
 
-
-
+    def selector(self, event):
+        print(event)
 
 
 #placeholder for second page
