@@ -12,10 +12,17 @@ while True:
     command = ser.read().hex()
     if command == '41':
         dist_data = ser.read().hex()
-        print('distance - 0x{}'.format(dist_data))
+        dist_dec = int(dist_data, 16)
+        #print('distance - 0x{}'.format(dist_data))
+        print('distance in decimaal - ',dist_dec)
     if command == '4c':
         light_data = ser.read().hex()
-        print('light - 0x{}'.format(light_data))
+        light_dec = int(light_data, 16)
+        #print('light - 0x{}'.format(light_data))
+        print('light in decimaal = ',light_dec)
     if command == '54':
         temp_data = ser.read().hex()
-        print('temp - 0x{}'.format(temp_data))
+        voltageOut = (int(temp_data, 16) * 5000) / 1024
+        temperatureC = round((voltageOut / 10) * 4)
+        #print('temp - 0x{}'.format(temp_data))
+        print('temp in C - ',temperatureC)
