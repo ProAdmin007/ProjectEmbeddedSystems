@@ -1,8 +1,9 @@
 import json
 import os.path
 
+
 class Data():
-    def __init__(self,fileName,dirName):
+    def __init__(self, fileName, dirName):
         self.fileName = fileName
         self.dirname = dirName
         self.data = self.openjson()
@@ -10,21 +11,21 @@ class Data():
     def filecheck(self):
         file = os.path.isfile(self.fileName)
         if not file:
-            open(self.fileName,"x")
-            self.writejson({self.dirname:{}})
+            open(self.fileName, "x")
+            self.writejson({self.dirname: {}})
             return False
         else:
             return True
-        
+
     def openjson(self):
         self.filecheck()
         with open(self.fileName) as json_file:
             return json.load(json_file)
-    
-    def writejson(self,jsonData):
+
+    def writejson(self, jsonData):
         with open(self.fileName, 'w') as outfile:
             json.dump(jsonData, outfile)
-    
+
     def getjson(self):
         self.data = self.openjson()
         return self.data
