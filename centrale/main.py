@@ -118,20 +118,19 @@ class RoomMenu(Page):
     def __init__(self, *args, **kwargs):
         Page.__init__(self, *args, **kwargs)
         lframe = tk.LabelFrame(self, padx=5, pady=5)
-        rframe = tk.LabelFrame(self, padx=5, pady=5)
+        self.rframe = tk.LabelFrame(self, padx=5, pady=5)
         lframe.grid(row=0, column=0, padx=5, pady=5)
-        rframe.grid(row=0, column=1, padx=5, pady=5, rowspan=10)
+        self.rframe.grid(row=0, column=1, padx=5, pady=5, rowspan=10)
         self.datastore = self.master.getdata()
         self.toggle = False
         self.room = ""
         self.sensor = ""
         # add the modules that are used in the homepage
-        welcome = tk.Label(rframe, wraplength=140, height=35, width=80, text="Selecteer een sensor aan de linker kant om data te zien")
+        welcome = tk.Label(self.rframe, wraplength=140, height=35, width=80, text="Selecteer een sensor aan de linker kant om data te zien")
         rooms = tk.Label(lframe, text="Schermen")
-        aangeven = tk.Label(rframe, text=self.room+":"+self.sensor)
         add = tk.Button(lframe, text="  +  ", command=lambda: self.master.showroom('addsensor'), width=7)           # word pop-up ipv framelayer
         remove = tk.Button(lframe, text="  -  ", command=lambda: self.removeSensor(), width=7)     # word pop-up ipv framelayer
-        backbutton = tk.Button(rframe, text="Terug naar kamers", command=lambda: self.master.showroom('homepage'),width=70)
+        backbutton = tk.Button(self.rframe, text="Terug naar kamers", command=lambda: self.master.showroom('homepage'),width=70)
         self.listbox1 = tk.Listbox(lframe, height=30)
         scrollbar = tk.Scrollbar(lframe)
         self.updatelist()
@@ -142,7 +141,6 @@ class RoomMenu(Page):
         self.listbox1.bind('<<ListboxSelect>>', self.selector)
         scrollbar.config(command=self.listbox1.yview)
 
-        aangeven.grid(row=0, column=0,)
         welcome.grid(row=1, column=0, sticky="NS")
         backbutton.grid(row=2, column=0)
         # building the grid`s for all the modules
@@ -168,9 +166,9 @@ class RoomMenu(Page):
 
     def selector(self, event):
         item = ""
-        if not self.listbox.get(self.listbox.curselection()) == "":
-            item = self.listbox.get(self.listbox.curselection())
-        aangeven = tk.Label(rframe, text=self.room+":"+self.sensor)
+        if not self.listbox1.get(self.listbox1.curselection()) == "":
+            item = self.listbox1.get(self.listbox1.curselection())
+        aangeven = tk.Label(self.rframe, text=self.room+":"+self.sensor)
         if self.toggle:
             message = messagebox.askquestion(title="Weet u het zeker?", message="Wilt u de sensor "+item+" Verwijderen?")
             if message == "yes":
@@ -182,10 +180,28 @@ class RoomMenu(Page):
                         self.updatelist()
                         break
         else:
-            self.sensor = item
+            self.sensordata(item)
     
     def updateroom(self):
         self.room = self.master.getselectedroom()
+        aangeven = tk.Label(self.rframe, text=self.room+" : "+self.sensor)
+        aangeven.grid(row=0, column=0)
+
+
+    def sensordata(self,sensor):
+        self.rframe.grid_forget()
+        self.rframe = tk.LabelFrame(self, padx=5, pady=5)
+        self.rframe.grid(row=0, column=1, padx=5, pady=5, rowspan=10)
+        lightframe = tk.LabelFrame(self.rframe, padx=5, pady=5)
+        lightframe.grid(row=1, column=0, padx=5,pady=5,rowspan=10)
+
+        labeltop = tk.Label()
+        backbutton = tk.Button(self.rframe, text="Terug naar kamers", command=lambda: self.master.showroom('homepage'),width=70)
+        aangeven = tk.Label(self.rframe, text=self.room+":"+sensor)
+
+        
+        aangeven.grid(row=0, column=0)
+        backbutton.grid(row=2, column=0, sticky="W")
 
 
 class Addsensor(Page):
