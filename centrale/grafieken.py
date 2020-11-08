@@ -61,9 +61,9 @@ class SensorData:
 # Graphs will automatically update every 10 seconds.
 class Graph(tk.Frame):
     def __init__(self, sensor_obj, *args, **kwargs):
-        tk.Frame.__init__(self, *args, **kwargs)
+        tk.Frame.__init__(self, width=200, height=200, *args, **kwargs)
         self.data = sensor_obj
-        self.fig = Figure(figsize=(5, 4), dpi=100)
+        self.fig = Figure(figsize=(2, 2), dpi=100)
         self.canvas = FigureCanvasTkAgg(self.fig, master=self)
 
         self.canvas.get_tk_widget().pack()
