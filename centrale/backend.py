@@ -1,7 +1,6 @@
 import json
 import os.path
 
-
 class Data():
     def __init__(self, fileName, dirName):
         self.fileName = fileName

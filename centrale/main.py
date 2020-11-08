@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
-import backend, grafieken
+import backend
+import grafieken
 import serial.tools.list_ports
 
 
@@ -130,7 +131,7 @@ class RoomMenu(Page):
         rooms = tk.Label(lframe, text="Schermen")
         add = tk.Button(lframe, text="  +  ", command=lambda: self.master.showroom('addsensor'), width=7)           # word pop-up ipv framelayer
         remove = tk.Button(lframe, text="  -  ", command=lambda: self.removeSensor(), width=7)     # word pop-up ipv framelayer
-        backbutton = tk.Button(self.rframe, text="Terug naar kamers", command=lambda: self.master.showroom('homepage'),width=70)
+        backbutton = tk.Button(self.rframe, text="Terug naar kamers", command=lambda: self.master.showroom('homepage'), width=70)
         self.listbox1 = tk.Listbox(lframe, height=30)
         scrollbar = tk.Scrollbar(lframe)
         self.updatelist()
@@ -181,55 +182,54 @@ class RoomMenu(Page):
                         break
         else:
             self.sensordata(item)
-    
+
     def updateroom(self):
         self.room = self.master.getselectedroom()
         aangeven = tk.Label(self.rframe, text=self.room+" : "+self.sensor)
         aangeven.grid(row=0, column=0)
 
-
-    def sensordata(self,sensor):
+    def sensordata(self, sensor):
         self.rframe.grid_forget()
         self.rframe = tk.LabelFrame(self, padx=5, pady=5)
         self.rframe.grid(row=0, column=1, padx=5, pady=5, rowspan=10)
-        lightframe = tk.LabelFrame(self.rframe, width=200,height=200,padx=5,pady=5)
-        tempframe = tk.LabelFrame(self.rframe, width=200,height=200, padx=5,pady=5)
-        lightframe.grid(row=1, column=0, padx=40,pady=5)
-        tempframe.grid(row=1, column=1, padx=40,pady=5)
+        lightframe = tk.LabelFrame(self.rframe, width=200, height=200, padx=5, pady=5)
+        tempframe = tk.LabelFrame(self.rframe, width=200, height=200,  padx=5, pady=5)
+        lightframe.grid(row=1, column=0, padx=40, pady=5)
+        tempframe.grid(row=1, column=1, padx=40, pady=5)
 
-        backbutton = tk.Button(self.rframe, text="Terug naar kamers", command=lambda: self.master.showroom('homepage'),width=70)
+        backbutton = tk.Button(self.rframe, text="Terug naar kamers", command=lambda: self.master.showroom('homepage'), width=70)
         aangeven = tk.Label(self.rframe, text=self.room+":"+sensor)
-        auto = tk.Button(self.rframe, text="Automatisch",width=20, command=lambda: self.buttonstate(auto))
-        up = tk.Button(self.rframe, text="omhoog", width=10,command=None)
-        down = tk.Button(self.rframe, text="omlaag", width=10,command=None)
+        auto = tk.Button(self.rframe, text="Automatisch", width=20, command=lambda: self.buttonstate(auto))
+        up = tk.Button(self.rframe, text="omhoog", width=10, command=None)
+        down = tk.Button(self.rframe, text="omlaag", width=10, command=None)
         # licht sensor widgets
         labellight = tk.Label(lightframe, text="Licht sensor")
         canvaslight = tk.Canvas(lightframe, width=200, height=200, bg='white')
-        
 
         # warmte sensor widgets
         labeltemp = tk.Label(tempframe, text="Warmte sensor")
         canvastemp = tk.Canvas(tempframe, width=200, height=200, bg='white')
 
         # licht sensor grid
-        labellight.grid(row=0, column=0,columnspan=2)
-        canvaslight.grid(row=1,column=0,columnspan=2)
+        labellight.grid(row=0, column=0, columnspan=2)
+        canvaslight.grid(row=1, column=0, columnspan=2)
 
         # warmte sensor widgets
-        labeltemp.grid(row=0, column=0,columnspan=2)
-        canvastemp.grid(row=1, column=0,columnspan=2)
-        #main body grid
-        aangeven.grid(row=0, column=0,columnspan=10)
-        backbutton.grid(row=12, column=0,columnspan=10)
-        auto.grid(row=2,column=0,columnspan=2)
-        up.grid(row=3,column=0,sticky="E")
-        down.grid(row=3,column=1,sticky="W")
+        labeltemp.grid(row=0, column=0, columnspan=2)
+        canvastemp.grid(row=1, column=0, columnspan=2)
+        # main body grid
+        aangeven.grid(row=0, column=0, columnspan=10)
+        backbutton.grid(row=12, column=0, columnspan=10)
+        auto.grid(row=2, column=0, columnspan=2)
+        up.grid(row=3, column=0, sticky="E")
+        down.grid(row=3, column=1, sticky="W")
 
-    def buttonstate(self,button):
+    def buttonstate(self, button):
         if button.config('relief')[-1] == 'sunken':
             button.config(relief="raised")
         else:
             button.config(relief="sunken")
+
 
 class Addsensor(Page):
     def __init__(self, *args, **kwargs):
@@ -245,13 +245,13 @@ class Addsensor(Page):
         # dropdown menu
         comport = tk.StringVar()
         comport.set(self.listport[0])
-        dropdown = tk.OptionMenu(frame,comport,self.listport)
+        dropdown = tk.OptionMenu(frame, comport, self.listport)
         # all the modules for the layout
         label = tk.Label(frame, text="Scherm toevoegen")
         labelname = tk.Label(frame, text="Naam:")
         labelcom = tk.Label(frame, text="Scherm:")
         inputbox = tk.Entry(frame)
-        add = tk.Button(frame, text="Toevoegen", width=25, command=lambda: self.addSensorJson(inputbox.get(),comport.get()))
+        add = tk.Button(frame, text="Toevoegen", width=25, command=lambda: self.addSensorJson(inputbox.get(), comport.get()))
         back = tk.Button(frame, text="Annuleren", width=25, command=lambda: self.master.showroom("roommenu"))
         # added a font and biger size for the label on the top
         label.config(font=("Courier", 30))
@@ -280,10 +280,10 @@ class Addsensor(Page):
             datajson["Kamers"][self.room]["Scherm"][name] = comport
             self.data.writejson(datajson)
             self.master.showroom("roommenu")
+
     def updatecoms(self):
-        self.room= self.master.getselectedroom()
+        self.room = self.master.getselectedroom()
         self.listport = serial.tools.list_ports.comports()
-        print(self.listport)
         if self.listport == []:
             self.listport.append("niet gevonden")
             messagebox.showerror(title="Geen schermen gevonden", message="Er zijn geen schermen aangesloten")
