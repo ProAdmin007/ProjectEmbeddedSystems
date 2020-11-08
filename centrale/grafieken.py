@@ -1,28 +1,12 @@
 import tkinter as tk
 import serial
 
-from pprint import pprint
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 from datetime import datetime
-import matplotlib.pyplot as plt
 
-#plt.plot(*zip(*sensor_data['light']))
-from matplotlib.backends.backend_tkagg import (
-    FigureCanvasTkAgg, NavigationToolbar2Tk)
-from matplotlib.figure import Figure
-""""
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_tkagg import (
-    FigureCanvasTkAgg, NavigationToolbar2Tk)
 
-fig = Figure(figsize=(5,4), dpi=100)
-fig.add_subplot(111).plot(*zip(*sensor_data['light']))
-
-canvas = FigureCanvasTkAgg(fig, master=root)
-canvas.draw()
-canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-"""
-
-class sensordata():
+class SensorData:
     def __init__(self, comport):
         self.conn = serial.Serial('COM{}'.format(comport), 9600, timeout=60)
         self.sensor_data = {'light': [], 'temperature': [], 'distance': []}
@@ -55,11 +39,12 @@ class sensordata():
             # add the sensor data to the dictionary
             self.sensor_data[command].append((time, data_byte))
 
-class lightgraph(tk.Frame):
-    def __init__(self, *args, **kwargs):
+
+class Graph(tk.Frame):
+    def __init__(self, sensor_obj, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
-        self.data = sensordata(3)
-        self.fig = Figure(figsize=(5,4), dpi=100)
+        self.data = sensor_obj
+        self.fig = Figure(figsize=(5, 4), dpi=100)
         self.canvas = FigureCanvasTkAgg(self.fig, master=self)
 
         self.canvas.get_tk_widget().pack()
@@ -67,10 +52,7 @@ class lightgraph(tk.Frame):
 
     def update_plot(self):
         self.data.readbyte()
-        data = self.data.return_light()
-
-        if data == []:
-            return
+        data = self.get_data()
 
         # zip and unzip data from [(time, data), (time, data)....]
         # to [(time, time, time....), (data, data, data...)]
@@ -80,16 +62,39 @@ class lightgraph(tk.Frame):
         x_axis = data_unzipped[0]
         y_axis = data_unzipped[1]
 
-        #self.add_point(self.velocity_line, x_axis)
-        self.drawgraph(x_axis, y_axis)
-        self.after(100, self.update_plot)
+        # self.add_point(self.velocity_line, x_axis)
+        self.draw_graph(x_axis, y_axis)
+        self.after(10000, self.update_plot)
 
-    def drawgraph(self, x, y):
+    def get_data(self):
+        pass
+
+    def draw_graph(self, x, y):
         self.fig.add_subplot(111).plot(x, y)
         self.canvas.draw()
 
 
+class LightGraph(Graph):
+    def __init__(self, master, sensor_obj):
+        self.sensor_obj = sensor_obj
+        Graph.__init__(self, sensor_obj)
+
+    def get_data(self):
+        return self.sensor_obj.return_light()
+
+
+class TempGraph(Graph):
+    def __init__(self, master, sensor_obj):
+        self.sensor_obj = sensor_obj
+        Graph.__init__(self, sensor_obj)
+
+    def get_data(self):
+        return self.sensor_obj.return_temp()
+
+
 if __name__ == '__main__':
     root = tk.Tk()
-    lightgraph(root).pack()
+    sensors_com3 = SensorData(3)
+    LightGraph(root, sensors_com3).pack()
+    TempGraph(root, sensors_com3).pack()
     root.mainloop()
