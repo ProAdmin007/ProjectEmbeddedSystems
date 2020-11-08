@@ -63,5 +63,5 @@ void check_command(void);
 
 void avg_light(void);
 void avg_temp(void);
-
+void avg_dist(void);
 #endif /* INC_DEF_H_ */
