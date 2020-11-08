@@ -14,7 +14,7 @@ from datetime import datetime
 # Can return light, temperature or distance data in this format.
 class SensorData:
     def __init__(self, comport):
-        self.conn = serial.Serial('COM{}'.format(comport), 9600, timeout=60)
+        self.conn = serial.Serial(comport, 9600, timeout=60)
         self.sensor_data = {'light': [], 'temperature': [], 'distance': []}
 
     # return the light data
@@ -122,7 +122,7 @@ class TempGraph(Graph):
 
 if __name__ == '__main__':
     root = tk.Tk()
-    sensors_com3 = SensorData(3)
+    sensors_com3 = SensorData('COM3')
     LightGraph(root, sensors_com3).pack()
     TempGraph(root, sensors_com3).pack()
     root.mainloop()
