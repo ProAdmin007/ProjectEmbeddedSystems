@@ -61,4 +61,7 @@ void screen_close(void);
 
 void check_command(void);
 
+void avg_light(void);
+void avg_temp(void);
+
 #endif /* INC_DEF_H_ */

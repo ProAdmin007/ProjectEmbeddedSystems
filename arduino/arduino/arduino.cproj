@@ -206,6 +206,7 @@
     <Folder Include="src\analog" />
     <Folder Include="src\HCSR04" />
     <Folder Include="src\lights" />
+    <Folder Include="src\measuring" />
     <Folder Include="src\scheduler" />
     <Folder Include="src\USART" />
   </ItemGroup>
@@ -238,6 +239,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\lights\lights_functions.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\measuring\measuring.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\measuring\measuring_functions.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\scheduler\AVR_TTC_scheduler.c">
