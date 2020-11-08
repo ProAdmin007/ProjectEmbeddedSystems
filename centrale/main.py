@@ -58,7 +58,9 @@ class Homepage(Page):
             self.listbox.config(foreground="black")
 
     def selector(self, event):
-        item = self.listbox.get(self.listbox.curselection())
+        item = ""
+        if not self.listbox.get(self.listbox.curselection()) == "":
+            item = self.listbox.get(self.listbox.curselection())
         if self.toggle:
             message = messagebox.askquestion(title="Weet u het zeker?", message="Wilt u de kamer "+item+" Verwijderen?")
             if message == "yes":
@@ -122,47 +124,53 @@ class RoomMenu(Page):
         self.datastore = self.master.getdata()
         self.toggle = False
         self.room = ""
+        self.sensor = ""
         # add the modules that are used in the homepage
-        welcome = tk.Label(rframe, wraplength=150, height=36, width=80, text="Selecteer een sensor aan de linker kant om data te zien")
+        welcome = tk.Label(rframe, wraplength=140, height=35, width=80, text="Selecteer een sensor aan de linker kant om data te zien")
         rooms = tk.Label(lframe, text="Schermen")
+        aangeven = tk.Label(rframe, text=self.room+":"+self.sensor)
         add = tk.Button(lframe, text="  +  ", command=lambda: self.master.showroom('addsensor'), width=7)           # word pop-up ipv framelayer
         remove = tk.Button(lframe, text="  -  ", command=lambda: self.removeSensor(), width=7)     # word pop-up ipv framelayer
-        self.listbox = tk.Listbox(lframe, height=30)
+        backbutton = tk.Button(rframe, text="Terug naar kamers", command=lambda: self.master.showroom('homepage'),width=70)
+        self.listbox1 = tk.Listbox(lframe, height=30)
         scrollbar = tk.Scrollbar(lframe)
-
         self.updatelist()
 
         # added some listbox config and added the events for selections
-        self.listbox.config(yscrollcommand=scrollbar.set)
-        self.listbox.event_generate('<<ListBoxSelect>>')
-        self.listbox.bind('<<ListboxSelect>>', self.selector)
-        scrollbar.config(command=self.listbox.yview)
+        self.listbox1.config(yscrollcommand=scrollbar.set)
+        self.listbox1.event_generate('<<ListBoxSelect>>')
+        self.listbox1.bind('<<ListboxSelect>>', self.selector)
+        scrollbar.config(command=self.listbox1.yview)
 
-        welcome.pack(expand="true")
+        aangeven.grid(row=0, column=0,)
+        welcome.grid(row=1, column=0, sticky="NS")
+        backbutton.grid(row=2, column=0)
         # building the grid`s for all the modules
         rooms.grid(row=0, column=0)
-        self.listbox.grid(row=1, column=0, padx=5, pady=5)
+        self.listbox1.grid(row=1, column=0, padx=5, pady=5)
         scrollbar.grid(row=1, column=1, sticky="NS")  # sticky NS so he can streatch the whole grid. otherwise it would be  a small scrollbar :)
         add.grid(row=2, column=0, padx=0, pady=5, sticky="W")
         remove.grid(row=2, column=0, padx=0, pady=5, sticky="E")
 
     def updatelist(self):
-        self.listbox.delete(0, 'end')
+        self.listbox1.delete(0, 'end')
         if not self.room == "":
             for v in self.datastore.getjson()["Kamers"][self.room]["Scherm"]:
-                self.listbox.insert(tk.END, v)
+                self.listbox1.insert(tk.END, v)
 
     def removeSensor(self):
         if not self.toggle:
             self.toggle = True
-            self.listbox.config(foreground="red")
+            self.listbox1.config(foreground="red")
         else:
             self.toggle = False
-            self.listbox.config(foreground="black")
+            self.listbox1.config(foreground="black")
 
     def selector(self, event):
-        item = self.listbox.get(self.listbox.curselection())
-        print(self.room)
+        item = ""
+        if not self.listbox.get(self.listbox.curselection()) == "":
+            item = self.listbox.get(self.listbox.curselection())
+        aangeven = tk.Label(rframe, text=self.room+":"+self.sensor)
         if self.toggle:
             message = messagebox.askquestion(title="Weet u het zeker?", message="Wilt u de sensor "+item+" Verwijderen?")
             if message == "yes":
@@ -220,10 +228,12 @@ class Addsensor(Page):
 
     def addSensorJson(self, name, comport):
         datajson = self.data.getjson()
-        datajson["Kamers"][self.room]["Scherm"][name] = "test"
+        print(self.master.getselectedroom())
         if name in datajson["Kamers"]:
             messagebox.showerror(title="Scherm toevoegen", message="Deze is al in gebruik")
         else:
+            print(self.room)
+            print(datajson["Kamers"][self.room])
             datajson["Kamers"][self.room]["Scherm"][name] = comport
             self.data.writejson(datajson)
             self.master.showroom("roommenu")
@@ -233,9 +243,6 @@ class Addsensor(Page):
         if self.listport == []:
             self.listport.append("niet gevonden")
             messagebox.showerror(title="Geen schermen gevonden", message="Er zijn geen schermen aangesloten")
-
-        
-        
 
 
 class MainView(tk.Frame):
