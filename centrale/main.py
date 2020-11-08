@@ -251,7 +251,7 @@ class Addsensor(Page):
         labelname = tk.Label(frame, text="Naam:")
         labelcom = tk.Label(frame, text="Scherm:")
         inputbox = tk.Entry(frame)
-        add = tk.Button(frame, text="Toevoegen", width=25, command=lambda: self.addSensorJson(inputbox.get(), self.comport.get()))
+        add = tk.Button(frame, text="Toevoegen", width=25, command=lambda: self.addSensorJson(inputbox.get(), self.comport.set()))
         back = tk.Button(frame, text="Annuleren", width=25, command=lambda: self.master.showroom("roommenu"))
         # added a font and biger size for the label on the top
         label.config(font=("Courier", 30))
