@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-import backend
+import backend, grafieken
 import serial.tools.list_ports
 
 
@@ -205,6 +205,7 @@ class RoomMenu(Page):
         # licht sensor widgets
         labellight = tk.Label(lightframe, text="Licht sensor")
         canvaslight = tk.Canvas(lightframe, width=200, height=200, bg='white')
+        
 
         # warmte sensor widgets
         labeltemp = tk.Label(tempframe, text="Warmte sensor")
@@ -271,7 +272,7 @@ class Addsensor(Page):
     def addSensorJson(self, name, comport):
         datajson = self.data.getjson()
         print(self.master.getselectedroom())
-        if name in datajson["Kamers"]:
+        if name in datajson["Kamers"][self.room]["Scherm"]:
             messagebox.showerror(title="Scherm toevoegen", message="Deze is al in gebruik")
         else:
             print(self.room)
@@ -282,6 +283,7 @@ class Addsensor(Page):
     def updatecoms(self):
         self.room= self.master.getselectedroom()
         self.listport = serial.tools.list_ports.comports()
+        print(self.listport)
         if self.listport == []:
             self.listport.append("niet gevonden")
             messagebox.showerror(title="Geen schermen gevonden", message="Er zijn geen schermen aangesloten")
