@@ -243,15 +243,15 @@ class Addsensor(Page):
         frame.grid(row=0, column=0, padx=5, pady=5,)
 
         # dropdown menu
-        comport = tk.StringVar()
-        comport.set(self.listport[0])
-        dropdown = tk.OptionMenu(frame, comport, self.listport)
+        self.comport = tk.StringVar()
+        self.comport.set(self.listport[0])
+        self.dropdown = tk.OptionMenu(frame, self.comport, self.listport)
         # all the modules for the layout
         label = tk.Label(frame, text="Scherm toevoegen")
         labelname = tk.Label(frame, text="Naam:")
         labelcom = tk.Label(frame, text="Scherm:")
         inputbox = tk.Entry(frame)
-        add = tk.Button(frame, text="Toevoegen", width=25, command=lambda: self.addSensorJson(inputbox.get(), comport.get()))
+        add = tk.Button(frame, text="Toevoegen", width=25, command=lambda: self.addSensorJson(inputbox.get(), self.comport.get()))
         back = tk.Button(frame, text="Annuleren", width=25, command=lambda: self.master.showroom("roommenu"))
         # added a font and biger size for the label on the top
         label.config(font=("Courier", 30))
@@ -261,7 +261,7 @@ class Addsensor(Page):
         inputbox.grid(row=1, column=1)
         labelname.grid(row=1, column=0)
         labelcom.grid(row=2, column=0)
-        dropdown.grid(row=2, column=1)
+        self.dropdown.grid(row=2, column=1)
         add.grid(row=3, column=0)
         back.grid(row=3, column=1)
 
@@ -283,10 +283,18 @@ class Addsensor(Page):
 
     def updatecoms(self):
         self.room = self.master.getselectedroom()
-        self.listport = serial.tools.list_ports.comports()
-        if self.listport == []:
+        self.listport = []
+        self.comport.set('')
+        self.dropdown['menu'].delete(0, 'end')
+        comports = serial.tools.list_ports.comports()
+        if comports == []:
             self.listport.append("niet gevonden")
             messagebox.showerror(title="Geen schermen gevonden", message="Er zijn geen schermen aangesloten")
+        else:
+            for a in comports:
+                self.listport.append[a[0]]
+                self.dropdown['menu'].add_command(label=a[0])
+        self.comport.set[self.listport[0]]
 
 
 class MainView(tk.Frame):
