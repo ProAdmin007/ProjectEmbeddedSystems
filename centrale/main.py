@@ -192,17 +192,43 @@ class RoomMenu(Page):
         self.rframe.grid_forget()
         self.rframe = tk.LabelFrame(self, padx=5, pady=5)
         self.rframe.grid(row=0, column=1, padx=5, pady=5, rowspan=10)
-        lightframe = tk.LabelFrame(self.rframe, padx=5, pady=5)
-        lightframe.grid(row=1, column=0, padx=5,pady=5,rowspan=10)
+        lightframe = tk.LabelFrame(self.rframe, width=200,height=200,padx=5,pady=5)
+        tempframe = tk.LabelFrame(self.rframe, width=200,height=200, padx=5,pady=5)
+        lightframe.grid(row=1, column=0, padx=40,pady=5)
+        tempframe.grid(row=1, column=1, padx=40,pady=5)
 
-        labeltop = tk.Label()
         backbutton = tk.Button(self.rframe, text="Terug naar kamers", command=lambda: self.master.showroom('homepage'),width=70)
         aangeven = tk.Label(self.rframe, text=self.room+":"+sensor)
+        auto = tk.Button(self.rframe, text="Automatisch",width=20, command=lambda: self.buttonstate(auto))
+        up = tk.Button(self.rframe, text="omhoog", width=10,command=None)
+        down = tk.Button(self.rframe, text="omlaag", width=10,command=None)
+        # licht sensor widgets
+        labellight = tk.Label(lightframe, text="Licht sensor")
+        canvaslight = tk.Canvas(lightframe, width=200, height=200, bg='white')
 
-        
-        aangeven.grid(row=0, column=0)
-        backbutton.grid(row=2, column=0, sticky="W")
+        # warmte sensor widgets
+        labeltemp = tk.Label(tempframe, text="Warmte sensor")
+        canvastemp = tk.Canvas(tempframe, width=200, height=200, bg='white')
 
+        # licht sensor grid
+        labellight.grid(row=0, column=0,columnspan=2)
+        canvaslight.grid(row=1,column=0,columnspan=2)
+
+        # warmte sensor widgets
+        labeltemp.grid(row=0, column=0,columnspan=2)
+        canvastemp.grid(row=1, column=0,columnspan=2)
+        #main body grid
+        aangeven.grid(row=0, column=0,columnspan=10)
+        backbutton.grid(row=12, column=0,columnspan=10)
+        auto.grid(row=2,column=0,columnspan=2)
+        up.grid(row=3,column=0,sticky="E")
+        down.grid(row=3,column=1,sticky="W")
+
+    def buttonstate(self,button):
+        if button.config('relief')[-1] == 'sunken':
+            button.config(relief="raised")
+        else:
+            button.config(relief="sunken")
 
 class Addsensor(Page):
     def __init__(self, *args, **kwargs):
