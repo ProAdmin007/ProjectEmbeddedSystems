@@ -5,13 +5,19 @@ bool light_ready = false;
 bool temp_ready = false;
 bool distance_ready = false;
 
+uint16_t light_avg_total;
+uint16_t light_avg_count;
+uint16_t temp_avg_total;
+uint16_t temp_avg_count;
+uint16_t dist_avg_total;
+uint16_t dist_avg_count;
+
 char screen_state;
 
 int main (void){
 	init();
 	screen_state = SCREEN_OPEN;
 	lights_open();
-	
 	scheduler_tasks();
 	
 	while(1){
@@ -22,10 +28,9 @@ int main (void){
 		if(temp_ready){
 			send_temp();
 		}
-		if(distance_ready){
+		if(1){
 			send_distance();
 		}
-		_delay_ms(50);
 		check_command();
 	}
 }
@@ -55,33 +60,52 @@ void init(){
 }
 
 void scheduler_tasks(){
-	SCH_Add_Task(set_light_bool, 0, 3);
-	SCH_Add_Task(set_temp_bool, 1, 3);
-	SCH_Add_Task(set_distance_bool, 2, 3);
+	SCH_Add_Task(set_light_bool, 0, 10);		// average light sent every 30 seconds
+	SCH_Add_Task(set_temp_bool, 0, 15);			// average temp sent every 40 seconds
+	SCH_Add_Task(set_distance_bool, 0, 20);		// average distance sent every 60 seconds
+
+	SCH_Add_Task(avg_light, 0, 1);				// average light measured in second increments
+	SCH_Add_Task(avg_temp, 0, 1);				// average temp measured in second increments
+	SCH_Add_Task(avg_dist, 0, 1);				// average distance measured in second increments
 }
 
 void send_light(){
 	char light_data;
-	light_data = get_light();		// get light data
-	USART_transmit(LIGHT_CODE);		// send byte signaling the data src
-	USART_transmit(light_data);		// send data
+	light_data = light_avg_total / light_avg_count;		// calculate average light value
+	
+	light_avg_count = 0;								// reset total of all values
+	light_avg_total = 0;								// reset total count
+
+	USART_transmit(LIGHT_CODE);							// send byte signaling the data source
+	USART_transmit(light_data);							// send data
 	light_ready = 0;
 }
 
 void send_temp(){
 	char temp_data;
-	temp_data = get_temp();			// get temperature data
-	USART_transmit(TEMP_CODE);		// send byte signaling the data source
-	USART_transmit(temp_data);		// send data
+	temp_data = temp_avg_total / temp_avg_count;		// calculate average temp value
+	
+	temp_avg_count = 0;									// reset total of all values
+	temp_avg_total = 0;									// reset total counts
+	
+	USART_transmit(TEMP_CODE);							// send byte signaling the data source
+	USART_transmit(temp_data);							// send data
 	temp_ready = 0;
 }
 
 void send_distance(){
-	char distance_data;
-	distance_data = HCSR04_get_distance();	// get distance data
-	USART_transmit(DISTANCE_CODE);			// send byte signaling data source
-	USART_transmit(distance_data);			// send distance data
-	distance_ready = 0;
+	if(dist_avg_count != 0){
+		char distance_data;
+		distance_data = dist_avg_total / dist_avg_count;	// calculate average distance
+	
+		dist_avg_count = 0;									// reset total of all values
+		dist_avg_total = 0;									// reset total counts	
+	
+		USART_transmit(DISTANCE_CODE);						// send byte signaling data source
+		USART_transmit(distance_data);						// send distance data
+		distance_data = 0x00;
+		distance_ready = 0;
+	}
 }
 
 /*-----------------------------------
@@ -119,21 +143,17 @@ the function does nothing.
 ----------------------------------*/
 
 void screen_open(){
-	if(screen_state != SCREEN_OPEN){
-		while(HCSR04_get_distance() > 0x12){
-			lights_busy();
-		}
-		lights_open();
+	while(HCSR04_get_distance() > 0x12){
+		lights_busy();
 	}
+	lights_open();
 }
 
 void screen_close(){
-	if(screen_state != SCREEN_CLOSED){
-		while(HCSR04_get_distance() < 0x4A){
-			lights_busy();
-		}
-		lights_closed();
+	while(HCSR04_get_distance() < 0x4A){
+		lights_busy();
 	}
+	lights_closed();
 }
 
 /*--------------------------------------
@@ -165,4 +185,31 @@ void check_command(){
 			screen_state = SCREEN_CLOSED;
 		}
 	}
+}
+
+/*-----------------------------------------------------
+These functions and variables are used to calculate the
+average values of the temperature and light sensor. 
+
+Averages are calculated by measuring the data from
+the sensor every second between sending the data, and
+dividing it by the seconds that have passed.
+
+These are called every second by the scheduler. Right
+before the data is sent, the average is calculated and
+send as the light or temperature data.
+-----------------------------------------------------*/
+void avg_light(){
+	light_avg_total += get_light();
+	light_avg_count += 1;
+}
+
+void avg_temp(){
+	temp_avg_total += get_temp();
+	temp_avg_count += 1;
+}
+
+void avg_dist(){
+	dist_avg_total += HCSR04_get_distance();
+	dist_avg_count += 1;
 }

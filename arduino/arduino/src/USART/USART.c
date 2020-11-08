@@ -34,13 +34,3 @@ unsigned char USART_receive(){
 	// Get and return received data from buffer
 	return UDR0;
 }
-
-// example code for initializing a connection and sending data
-/*int main(void){
-	// initialize serial connection
-	USART_Init(MYUBRR);
-	while(1){
-		USART_Transmit(0x69);
-		// send data over serial connection
-	}
-}*/
