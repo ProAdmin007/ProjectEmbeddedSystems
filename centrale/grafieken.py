@@ -6,7 +6,9 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 
 #plt.plot(*zip(*sensor_data['light']))
-
+from matplotlib.backends.backend_tkagg import (
+    FigureCanvasTkAgg, NavigationToolbar2Tk)
+from matplotlib.figure import Figure
 """"
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import (
@@ -57,9 +59,10 @@ class lightgraph(tk.Frame):
     def __init__(self, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
         self.data = sensordata(3)
-        self.canvas = tk.Canvas(self)
-        self.canvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-        self.light_line = self.canvas.create_line(0,0,0,0, fill="red")
+        self.fig = Figure(figsize=(5,4), dpi=100)
+        self.canvas = FigureCanvasTkAgg(self.fig, master=self)
+
+        self.canvas.get_tk_widget().pack()
         self.update_plot()
 
     def update_plot(self):
@@ -78,19 +81,12 @@ class lightgraph(tk.Frame):
         y_axis = data_unzipped[1]
 
         #self.add_point(self.velocity_line, x_axis)
-        self.add_point(self.light_line, y_axis)
-        self.canvas.xview_moveto(1.0)
+        self.drawgraph(x_axis, y_axis)
         self.after(100, self.update_plot)
 
-    def add_point(self, line, y):
-        coords = self.canvas.coords(line)
-        x = coords[-2] + 1
-        coords.append(x)
-        coords.append(y)
-
-        coords = coords[-200:]
-        self.canvas.coords(line, *coords)
-        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+    def drawgraph(self, x, y):
+        self.fig.add_subplot(111).plot(x, y)
+        self.canvas.draw()
 
 
 if __name__ == '__main__':
