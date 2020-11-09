@@ -1,6 +1,6 @@
 import json
 import os.path
-import serial
+
 
 class Data():
     def __init__(self, fileName, dirName):

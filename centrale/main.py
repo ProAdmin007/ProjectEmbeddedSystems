@@ -25,11 +25,22 @@ class Homepage(Page):
         self.toggle = False
 
         # add the modules that are used in the homepage
-        welcome = tk.Label(rframe, wraplength=150, height=36, width=80, text="Welkom!")
-        rooms = tk.Label(lframe, text="Kamers")
-        add = tk.Button(lframe, text="  +  ", command=lambda: self.master.showroom('addroom'), width=7)
-        remove = tk.Button(lframe, text="  -  ", command=lambda: self.removeRoom(), width=7)
-        self.listbox = tk.Listbox(lframe, height=30)
+        welcome = tk.Label(rframe,
+                           height=36,
+                           width=80,
+                           text="Welkom bij het startscherm van Trolluik")
+        rooms = tk.Label(lframe,
+                         text="Kamers")
+        add = tk.Button(lframe,
+                        text="+",
+                        command=lambda: self.master.showroom('addroom'),
+                        width=7)
+        remove = tk.Button(lframe,
+                           text="-",
+                           command=lambda: self.RemRoom(),
+                           width=7)
+        self.listbox = tk.Listbox(lframe,
+                                  height=30)
         scrollbar = tk.Scrollbar(lframe)
         self.updatelist()
         self.listbox.config(yscrollcommand=scrollbar.set)
@@ -50,7 +61,7 @@ class Homepage(Page):
         for values in self.datastore.getjson()["Kamers"]:
             self.listbox.insert(tk.END, values)
 
-    def removeRoom(self):
+    def RemRoom(self):
         if not self.toggle:
             self.toggle = True
             self.listbox.config(foreground="red")
@@ -63,7 +74,9 @@ class Homepage(Page):
         if not self.listbox.get(self.listbox.curselection()) == "":
             item = self.listbox.get(self.listbox.curselection())
         if self.toggle:
-            message = messagebox.askquestion(title="Weet u het zeker?", message="Wilt u de kamer "+item+" Verwijderen?")
+            title = "Weet u het zeker?"
+            msg = "Wilt u de kamer "+item+" Verwijderen?"
+            message = messagebox.askquestion(title=title, message=msg)
             if message == "yes":
                 data = self.datastore.getjson()
                 for i in data["Kamers"]:
@@ -89,8 +102,15 @@ class AddRoom(Page):
         label = tk.Label(frame, text="kamer toevoegen")
         labelname = tk.Label(frame, text="Naam:")
         inputbox = tk.Entry(frame)
-        add = tk.Button(frame, text="Toevoegen", width=25, command=lambda: self.addRoomJson(inputbox.get()))
-        back = tk.Button(frame, text="Annuleren", width=25, command=lambda: self.master.showroom("homepage"))
+        add = tk.Button(frame,
+                        text="Toevoegen",
+                        width=25,
+                        command=lambda: self.addRoomJson(inputbox.get()))
+
+        back = tk.Button(frame,
+                         text="Annuleren",
+                         width=25,
+                         command=lambda: self.master.showroom("homepage"))
         # added a font and biger size for the label on the top
         label.config(font=("Courier", 30))
 
@@ -108,7 +128,8 @@ class AddRoom(Page):
     def addRoomJson(self, name):
         datajson = self.data.getjson()
         if name in datajson["Kamers"]:
-            messagebox.showerror(title="Kamer toevoegen", message="Deze kamer bestaat al!")
+            messagebox.showerror(title="Kamer toevoegen",
+                                 message="Deze kamer bestaat al!")
         else:
             datajson["Kamers"][name] = {"Scherm": {}}
             self.data.writejson(datajson)
@@ -127,11 +148,26 @@ class RoomMenu(Page):
         self.room = ""
         self.sensor = ""
         # add the modules that are used in the homepage
-        welcome = tk.Label(self.rframe, wraplength=140, height=35, width=80, text="Selecteer een sensor aan de linker kant om data te zien")
-        rooms = tk.Label(lframe, text="Schermen")
-        add = tk.Button(lframe, text="  +  ", command=lambda: self.master.showroom('addsensor'), width=7)           # word pop-up ipv framelayer
-        remove = tk.Button(lframe, text="  -  ", command=lambda: self.removeSensor(), width=7)     # word pop-up ipv framelayer
-        backbutton = tk.Button(self.rframe, text="Terug naar kamers", command=lambda: self.master.showroom('homepage'), width=70)
+        welcometxt = "Selecteer een sensor aan de linker kant om data te zien"
+        welcome = tk.Label(self.rframe,
+                           wraplength=140,
+                           height=35,
+                           width=80,
+                           text=welcometxt)
+        rooms = tk.Label(lframe,
+                         text="Schermen")
+        add = tk.Button(lframe,
+                        text="  +  ",
+                        command=lambda: self.master.showroom('addsensor'),
+                        width=7)
+        remove = tk.Button(lframe,
+                           text="  -  ",
+                           command=lambda: self.removeSensor(),
+                           width=7)
+        backbtn = tk.Button(self.rframe,
+                            text="Terug naar kamers",
+                            command=lambda: self.master.showroom('homepage'),
+                            width=70)
         self.listbox1 = tk.Listbox(lframe, height=30)
         scrollbar = tk.Scrollbar(lframe)
         self.updatelist()
@@ -143,11 +179,11 @@ class RoomMenu(Page):
         scrollbar.config(command=self.listbox1.yview)
 
         welcome.grid(row=1, column=0, sticky="NS")
-        backbutton.grid(row=2, column=0)
+        backbtn.grid(row=2, column=0)
         # building the grid`s for all the modules
         rooms.grid(row=0, column=0)
         self.listbox1.grid(row=1, column=0, padx=5, pady=5)
-        scrollbar.grid(row=1, column=1, sticky="NS")  # sticky NS so he can streatch the whole grid. otherwise it would be  a small scrollbar :)
+        scrollbar.grid(row=1, column=1, sticky="NS")
         add.grid(row=2, column=0, padx=0, pady=5, sticky="W")
         remove.grid(row=2, column=0, padx=0, pady=5, sticky="E")
 
@@ -169,9 +205,10 @@ class RoomMenu(Page):
         item = ""
         if not self.listbox1.get(self.listbox1.curselection()) == "":
             item = self.listbox1.get(self.listbox1.curselection())
-        aangeven = tk.Label(self.rframe, text=self.room+":"+self.sensor)
         if self.toggle:
-            message = messagebox.askquestion(title="Weet u het zeker?", message="Wilt u de sensor "+item+" Verwijderen?")
+            msg = "Wilt u de sensor "+item+" Verwijderen?"
+            message = messagebox.askquestion(title="Weet u het zeker?",
+                                             message=msg)
             if message == "yes":
                 data = self.datastore.getjson()
                 for i in data["Kamers"][self.room]["Scherm"]:
@@ -192,16 +229,22 @@ class RoomMenu(Page):
         self.rframe.grid_forget()
         self.rframe = tk.LabelFrame(self, padx=5, pady=5)
         self.rframe.grid(row=0, column=1, padx=5, pady=5, rowspan=10)
-        lightframe = tk.LabelFrame(self.rframe, width=200, height=200, padx=5, pady=5)
-        tempframe = tk.LabelFrame(self.rframe, width=200, height=200,  padx=5, pady=5)
+        lightframe = tk.LabelFrame(self.rframe, width=200, height=200, padx=5,
+                                   pady=5)
+        tempframe = tk.LabelFrame(self.rframe, width=200, height=200,  padx=5,
+                                  pady=5)
         lightframe.grid(row=1, column=0, padx=40, pady=5)
         tempframe.grid(row=1, column=1, padx=40, pady=5)
-        comport = self.datastore.getjson()["Kamers"][self.room]["Scherm"][sensor]
+        comport = self.datastore.getjson()
+        comport = comport["Kamers"][self.room]["Scherm"][sensor]
         sensorcom = grafieken.SensorData(comport)
 
-        backbutton = tk.Button(self.rframe, text="Terug naar kamers", command=lambda: self.master.showroom('homepage'), width=70)
+        backbtn = tk.Button(self.rframe, text="Terug naar kamers",
+                            command=lambda: self.master.showroom('homepage'),
+                            width=70)
         aangeven = tk.Label(self.rframe, text=self.room+":"+sensor)
-        auto = tk.Button(self.rframe, text="Automatisch", width=20, command=lambda: self.buttonstate(auto))
+        auto = tk.Button(self.rframe, text="Automatisch", width=20,
+                         command=lambda: self.buttonstate(auto))
         up = tk.Button(self.rframe, text="omhoog", width=10, command=None)
         down = tk.Button(self.rframe, text="omlaag", width=10, command=None)
         # licht sensor widgets
@@ -221,7 +264,7 @@ class RoomMenu(Page):
         canvastemp.grid(row=1, column=0, columnspan=2)
         # main body grid
         aangeven.grid(row=0, column=0, columnspan=10)
-        backbutton.grid(row=12, column=0, columnspan=10)
+        backbtn.grid(row=12, column=0, columnspan=10)
         auto.grid(row=2, column=0, columnspan=2)
         up.grid(row=3, column=0, sticky="E")
         down.grid(row=3, column=1, sticky="W")
@@ -237,6 +280,7 @@ class Addsensor(Page):
     def __init__(self, *args, **kwargs):
         Page.__init__(self, *args, **kwargs)
         self.data = self.master.getdata()
+        print(self.data.getjson())
         self.room = "none"
         self.listport = ["Niks gevonden"]
 
@@ -253,8 +297,11 @@ class Addsensor(Page):
         labelname = tk.Label(frame, text="Naam:")
         labelcom = tk.Label(frame, text="Scherm:")
         inputbox = tk.Entry(frame)
-        add = tk.Button(frame, text="Toevoegen", width=25, command=lambda: self.addSensorJson(inputbox.get(), self.comport.get()))
-        back = tk.Button(frame, text="Annuleren", width=25, command=lambda: self.master.showroom("roommenu"))
+        add = tk.Button(frame, text="Toevoegen", width=25,
+                        command=lambda: self.SaveSensor(inputbox.get(),
+                                                        self.comport.get()))
+        back = tk.Button(frame, text="Annuleren", width=25,
+                         command=lambda: self.master.showroom("roommenu"))
         # added a font and biger size for the label on the top
         label.config(font=("Courier", 30))
 
@@ -271,10 +318,11 @@ class Addsensor(Page):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-    def addSensorJson(self, name, comport):
+    def SaveSensor(self, name, comport):
         datajson = self.data.getjson()
         if name in datajson["Kamers"][self.room]["Scherm"]:
-            messagebox.showerror(title="Scherm toevoegen", message="Deze is al in gebruik")
+            messagebox.showerror(title="Scherm toevoegen",
+                                 message="Deze is al in gebruik")
         else:
             datajson["Kamers"][self.room]["Scherm"][name] = comport
             self.data.writejson(datajson)
@@ -288,11 +336,14 @@ class Addsensor(Page):
         comports = serial.tools.list_ports.comports()
         if comports == []:
             self.listport.append("niet gevonden")
-            messagebox.showerror(title="Geen schermen gevonden", message="Er zijn geen schermen aangesloten")
+            messagebox.showerror(title="Geen schermen gevonden",
+                                 message="Er zijn geen schermen aangesloten")
         else:
-            for a,b,c in sorted(comports):
-                self.listport.append(a)
-                self.dropdown['menu'].add_command(label=a,command=tk._setit(self.comport, a))
+            for comport, hwid, devicename in sorted(comports):
+                self.listport.append(comport)
+                cmd = tk._setit(self.comport, comport)
+                self.dropdown['menu'].add_command(label=comport,
+                                                  command=cmd)
         self.comport.set(self.listport[0])
 
 
@@ -306,14 +357,15 @@ class MainView(tk.Frame):
 
         self.rooms['homepage'] = Homepage(self)  # call homepage
         self.rooms['addroom'] = AddRoom(self)    # Add a room page
-        self.rooms['roommenu'] = RoomMenu(self)  # Add the room page for sensors
-        self.rooms['addsensor'] = Addsensor(self)
+        self.rooms['roommenu'] = RoomMenu(self)  # call roommenu
+        self.rooms['addsensor'] = Addsensor(self)  # add sensor page
 
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
 
         for i in self.rooms:
-            self.rooms[i].place(in_=container, x=0, y=0, relwidth=1, relheight=1)
+            self.rooms[i].place(in_=container, x=0, y=0, relwidth=1,
+                                relheight=1)
 
         self.rooms['homepage'].show()       # show homepage first
 
