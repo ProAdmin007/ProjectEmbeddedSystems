@@ -14,7 +14,7 @@ from datetime import datetime
 # Can return light, temperature or distance data in this format.
 class SensorData:
     def __init__(self, comport):
-        self.conn = serial.Serial(comport, 9600, timeout=60)
+        self.conn = serial.Serial(comport, 9600, timeout=3)
         self.sensor_data = {'light': [], 'temperature': [], 'distance': []}
 
     # return the light data
@@ -78,10 +78,14 @@ class Graph(tk.Frame):
         # to [(time, time, time....), (data, data, data...)]
         data_zipped = zip(*data)
         data_unzipped = [*data_zipped]
-
+        
         # get x-axis and y-axis data
-        x_axis = data_unzipped[0]
-        y_axis = data_unzipped[1]
+        if not data_unzipped == []:
+            x_axis = data_unzipped[0]
+            y_axis = data_unzipped[1]
+        else:
+            x_axis = (0,0)
+            y_axis = (0,0)
 
         # draw the graph
         # rerun this function automatically after 10 seconds

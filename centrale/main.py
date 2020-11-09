@@ -236,7 +236,7 @@ class RoomMenu(Page):
         tempframe.grid(row=1, column=1, padx=40, pady=5)
         comport = self.datastore.getjson()
         comport = comport["Kamers"][self.room]["Scherm"][sensor]
-        #sensorcom = grafieken.SensorData(comport)
+        sensorcom = grafieken.SensorData(comport)
 
         backbtn = tk.Button(self.rframe, text="Terug naar kamers", width=70,
                             command=lambda: self.master.showroom('homepage'))
