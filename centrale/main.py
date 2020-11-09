@@ -251,7 +251,7 @@ class Addsensor(Page):
         labelname = tk.Label(frame, text="Naam:")
         labelcom = tk.Label(frame, text="Scherm:")
         inputbox = tk.Entry(frame)
-        add = tk.Button(frame, text="Toevoegen", width=25, command=lambda: self.addSensorJson(inputbox.get(), self.comport.set()))
+        add = tk.Button(frame, text="Toevoegen", width=25, command=lambda: self.addSensorJson(inputbox.get(), self.comport.get()))
         back = tk.Button(frame, text="Annuleren", width=25, command=lambda: self.master.showroom("roommenu"))
         # added a font and biger size for the label on the top
         label.config(font=("Courier", 30))
@@ -294,7 +294,7 @@ class Addsensor(Page):
             for a,b,c in sorted(comports):
                 print(a)
                 self.listport.append(a)
-                self.dropdown['menu'].add_command(label=a)
+                self.dropdown['menu'].add_command(label=a,command=self.comport.set(a))
         self.comport.set(self.listport[0])
 
 
