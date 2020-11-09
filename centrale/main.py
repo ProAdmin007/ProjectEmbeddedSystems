@@ -292,9 +292,8 @@ class Addsensor(Page):
             messagebox.showerror(title="Geen schermen gevonden", message="Er zijn geen schermen aangesloten")
         else:
             for a,b,c in sorted(comports):
-                print(a)
                 self.listport.append(a)
-                self.dropdown['menu'].add_command(label=a,command=self.comport.set(a))
+                self.dropdown['menu'].add_command(label=a,command=tk._setit(self.comport, a))
         self.comport.set(self.listport[0])
 
 
