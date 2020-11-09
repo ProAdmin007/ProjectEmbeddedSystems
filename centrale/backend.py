@@ -2,12 +2,17 @@ import json
 import os.path
 
 
+# Class data is used to make build the json
+# its just a layer ontop of the json lib
+# So its really easy to make a new file with data
 class Data():
     def __init__(self, fileName, dirName):
         self.fileName = fileName
         self.dirname = dirName
         self.data = self.openjson()
 
+    # Check if the file exsists
+    # if not its creats it
     def filecheck(self):
         file = os.path.isfile(self.fileName)
         if not file:

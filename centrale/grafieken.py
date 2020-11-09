@@ -57,7 +57,7 @@ class SensorData:
 # The parent object for the graphs.
 # Takes a sensor object (basically a serial connection with an arduino).
 # Implements most of the functions needed in the light and temp graph,
-#   those only need to override the get_data function.
+# those only need to override the get_data function.
 # Graphs will automatically update every 10 seconds.
 class Graph(tk.Frame):
     def __init__(self, sensor_obj, *args, **kwargs):
