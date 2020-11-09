@@ -29,6 +29,10 @@ class SensorData:
     def return_dist(self):
         return self.sensor_data['distance']
 
+    # write a byte to the arduino
+    def send_byte(self, byte):
+        self.conn.write(byte)
+
     # reads a byte. if it is a known data identifier byte, it will read
     #   the next byte and write the data to the corresponding list
     def readbyte(self):
