@@ -60,13 +60,13 @@ class SensorData:
 # those only need to override the get_data function.
 # Graphs will automatically update every 10 seconds.
 class Graph(tk.Frame):
-    def __init__(self, sensor_obj, *args, **kwargs):
-        tk.Frame.__init__(self, width=200, height=200, *args, **kwargs)
+    def __init__(self, master, sensor_obj, *args, **kwargs):
+        tk.Frame.__init__(self, master, width=200, height=200, *args, **kwargs)
         self.data = sensor_obj
         self.fig = Figure(figsize=(2, 2), dpi=100)
-        self.canvas = FigureCanvasTkAgg(self.fig, master=self)
+        self.canvas = FigureCanvasTkAgg(self.fig, master=master)
 
-        self.canvas.get_tk_widget().pack()
+        self.canvas.get_tk_widget().grid(row=1, column=0)
         self.update_plot()
 
     def update_plot(self):
@@ -103,7 +103,7 @@ class Graph(tk.Frame):
 class LightGraph(Graph):
     def __init__(self, master, sensor_obj):
         self.sensor_obj = sensor_obj
-        Graph.__init__(self, sensor_obj)
+        Graph.__init__(self, master, sensor_obj)
 
     def get_data(self):
         return self.sensor_obj.return_light()
@@ -114,7 +114,7 @@ class LightGraph(Graph):
 class TempGraph(Graph):
     def __init__(self, master, sensor_obj):
         self.sensor_obj = sensor_obj
-        Graph.__init__(self, sensor_obj)
+        Graph.__init__(self, master, sensor_obj)
 
     def get_data(self):
         return self.sensor_obj.return_temp()

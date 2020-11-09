@@ -224,8 +224,9 @@ class RoomMenu(Page):
         aangeven.grid(row=0, column=0)
 
     def sensordata(self, sensor):
-        self.rframe.grid_remove()
-        #self.rframe = tk.LabelFrame(self, padx=5, pady=5)
+
+        for widget in self.rframe.winfo_children():
+            widget.destroy()
         self.rframe.grid(row=0, column=1, padx=5, pady=5, rowspan=10)
         lightframe = tk.LabelFrame(self.rframe, width=200, height=200, padx=5,
                                    pady=5)
@@ -245,28 +246,31 @@ class RoomMenu(Page):
         up = tk.Button(self.rframe, text="omhoog", width=10, command=None)
         down = tk.Button(self.rframe, text="omlaag", width=10, command=None)
         # licht sensor widgets
+        graphframe = tk.Frame(lightframe)
         labellight = tk.Label(lightframe, text="Licht sensor")
-        #canvaslight = grafieken.LightGraph(lightframe, sensorcom)
-        canvaslight = tk.Canvas(lightframe, width=200, height=200)
+        canvaslight = grafieken.LightGraph(graphframe, sensorcom)
 
         # warmte sensor widgets
+        graphframe2 = tk.Frame(tempframe)
         labeltemp = tk.Label(tempframe, text="Warmte sensor")
-        #canvastemp = grafieken.TempGraph(tempframe, sensorcom)
-        canvastemp = tk.Canvas(tempframe, width=200, height=200)
+        canvastemp = grafieken.TempGraph(graphframe2, sensorcom)
 
         # licht sensor grid
-        labellight.grid(row=0, column=0, columnspan=2)
-        canvaslight.grid(row=1, column=0, columnspan=2)
+        labellight.grid(row=0, column=0, columnspan=1)
+        graphframe.grid(row=1, column=0, columnspan=1)
+        #canvaslight.grid(row=1, column=0, columnspan=1)
 
         # warmte sensor widgets
-        labeltemp.grid(row=0, column=0, columnspan=2)
-        canvastemp.grid(row=1, column=0, columnspan=2)
+        labeltemp.grid(row=0, column=1, columnspan=1)
+        graphframe2.grid(row=1, column=1, columnspan=1)
+        # canvastemp.grid(row=1, column=1, columnspan=1)
         # main body grid
         aangeven.grid(row=0, column=0, columnspan=10)
         backbtn.grid(row=12, column=0, columnspan=10)
         auto.grid(row=2, column=0, columnspan=2)
         up.grid(row=3, column=0, sticky="E")
         down.grid(row=3, column=1, sticky="W")
+
 
     def buttonstate(self, button):
         if button.config('relief')[-1] == 'sunken':
