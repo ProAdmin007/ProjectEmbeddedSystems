@@ -196,6 +196,8 @@ class RoomMenu(Page):
         tempframe = tk.LabelFrame(self.rframe, width=200, height=200,  padx=5, pady=5)
         lightframe.grid(row=1, column=0, padx=40, pady=5)
         tempframe.grid(row=1, column=1, padx=40, pady=5)
+        comport = self.datastore.getjson()["Kamers"][self.room]["Scherm"][sensor]
+        sensorcom = grafieken.SensorData(comport)
 
         backbutton = tk.Button(self.rframe, text="Terug naar kamers", command=lambda: self.master.showroom('homepage'), width=70)
         aangeven = tk.Label(self.rframe, text=self.room+":"+sensor)
@@ -204,11 +206,11 @@ class RoomMenu(Page):
         down = tk.Button(self.rframe, text="omlaag", width=10, command=None)
         # licht sensor widgets
         labellight = tk.Label(lightframe, text="Licht sensor")
-        canvaslight = tk.Canvas(lightframe, width=200, height=200, bg='white')
+        canvaslight = grafieken.LightGraph(lightframe, sensorcom)
 
         # warmte sensor widgets
         labeltemp = tk.Label(tempframe, text="Warmte sensor")
-        canvastemp = tk.Canvas(tempframe, width=200, height=200, bg='white')
+        canvastemp = grafieken.TempGraph(tempframe, sensorcom)
 
         # licht sensor grid
         labellight.grid(row=0, column=0, columnspan=2)
@@ -271,12 +273,9 @@ class Addsensor(Page):
 
     def addSensorJson(self, name, comport):
         datajson = self.data.getjson()
-        print(self.master.getselectedroom())
         if name in datajson["Kamers"][self.room]["Scherm"]:
             messagebox.showerror(title="Scherm toevoegen", message="Deze is al in gebruik")
         else:
-            print(self.room)
-            print(datajson["Kamers"][self.room])
             datajson["Kamers"][self.room]["Scherm"][name] = comport
             self.data.writejson(datajson)
             self.master.showroom("roommenu")
