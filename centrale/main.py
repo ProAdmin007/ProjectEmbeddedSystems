@@ -241,10 +241,11 @@ class RoomMenu(Page):
         backbtn = tk.Button(self.rframe, text="Terug naar kamers", width=70,
                             command=lambda: self.master.showroom('homepage'))
         aangeven = tk.Label(self.rframe, text=self.room+":"+sensor)
-        auto = tk.Button(self.rframe, text="Automatisch", width=20,
+        auto = tk.Button(self.rframe, text="Handmatige bediening", width=20,
                          command=lambda: self.buttonstate(auto))
-        up = tk.Button(self.rframe, text="omhoog", width=10, command=None)
-        down = tk.Button(self.rframe, text="omlaag", width=10, command=None)
+
+        up = tk.Button(self.rframe, text="omhoog", width=10, command=lambda: sensorcom.send_byte(b'\x53'))
+        down = tk.Button(self.rframe, text="omlaag", width=10, command=lambda: sensorcom.send_byte(b'\x52'))
         # licht sensor widgets
         graphframe = tk.Frame(lightframe)
         labellight = tk.Label(lightframe, text="Licht sensor")
@@ -271,12 +272,42 @@ class RoomMenu(Page):
         up.grid(row=3, column=0, sticky="E")
         down.grid(row=3, column=1, sticky="W")
 
+<<<<<<< HEAD
+=======
+        self.threshold_check(auto, sensorcom)
+
+>>>>>>> 31290a989af42f69c7dc85c1aa5fc11899bfb8a2
     def buttonstate(self, button):
         if button.config('relief')[-1] == 'sunken':
             button.config(relief="raised")
         else:
             button.config(relief="sunken")
 
+    def threshold_check(self, button, arduino):
+        light_threshold = 50 # randomly chosen
+        open_command = b'\x53'
+        close_command =  b'\x52'
+
+        if button['relief'] == 'raised': # button not pressed, control it automatically. the other relief state is sunken
+            # get the light data
+            light_value = arduino.return_light()
+
+            # check if its not empty
+            if light_value != []:
+                # get the latest light data value
+                latest_value = light_value[-1][1]
+
+                # check if the value is smaller than the threshold
+                # if so, send the close command
+                if latest_value < light_threshold:
+                    arduino.send_byte(close_command)
+
+                # else, send the open command
+                else:
+                    arduino.send_byte(open_command)
+
+        # call this function every second
+        self.after(1000, lambda: self.threshold_check(button, arduino))
 
 class Addsensor(Page):
     def __init__(self, *args, **kwargs):
