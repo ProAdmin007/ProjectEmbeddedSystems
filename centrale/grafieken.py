@@ -78,14 +78,14 @@ class Graph(tk.Frame):
         # to [(time, time, time....), (data, data, data...)]
         data_zipped = zip(*data)
         data_unzipped = [*data_zipped]
-        
+
         # get x-axis and y-axis data
         if not data_unzipped == []:
             x_axis = data_unzipped[0]
             y_axis = data_unzipped[1]
         else:
-            x_axis = (0,0)
-            y_axis = (0,0)
+            x_axis = (0, 0)
+            y_axis = (0, 0)
 
         # draw the graph
         # rerun this function automatically after 10 seconds

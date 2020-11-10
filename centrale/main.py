@@ -248,17 +248,17 @@ class RoomMenu(Page):
         # licht sensor widgets
         graphframe = tk.Frame(lightframe)
         labellight = tk.Label(lightframe, text="Licht sensor")
-        canvaslight = grafieken.LightGraph(graphframe, sensorcom)
+        grafieken.LightGraph(graphframe, sensorcom)
 
         # warmte sensor widgets
         graphframe2 = tk.Frame(tempframe)
         labeltemp = tk.Label(tempframe, text="Warmte sensor")
-        canvastemp = grafieken.TempGraph(graphframe2, sensorcom)
+        grafieken.TempGraph(graphframe2, sensorcom)
 
         # licht sensor grid
         labellight.grid(row=0, column=0, columnspan=1)
         graphframe.grid(row=1, column=0, columnspan=1)
-        #canvaslight.grid(row=1, column=0, columnspan=1)
+        # canvaslight.grid(row=1, column=0, columnspan=1)
 
         # warmte sensor widgets
         labeltemp.grid(row=0, column=1, columnspan=1)
@@ -270,7 +270,6 @@ class RoomMenu(Page):
         auto.grid(row=2, column=0, columnspan=2)
         up.grid(row=3, column=0, sticky="E")
         down.grid(row=3, column=1, sticky="W")
-
 
     def buttonstate(self, button):
         if button.config('relief')[-1] == 'sunken':
@@ -315,7 +314,6 @@ class Addsensor(Page):
         self.dropdown.grid(row=2, column=1)
         add.grid(row=3, column=0)
         back.grid(row=3, column=1)
-
         # center the window
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -340,6 +338,7 @@ class Addsensor(Page):
             self.listport.append("niet gevonden")
             messagebox.showerror(title="Geen schermen gevonden",
                                  message="Er zijn geen schermen aangesloten")
+            self.master.showroom("roommenu")
         else:
             for comport, hwid, devicename in sorted(comports):
                 self.listport.append(comport)
