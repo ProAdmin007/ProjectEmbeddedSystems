@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include "./analog_definitions.h"
 #include "./analog_functions.h"
+#include <util/delay.h>
 
 // initialize the Analog to Digital Converter
 void ADC_init(void){
@@ -63,6 +64,10 @@ int get_analog(int pin){
 	ADCSRA |= (1<<ADSC);
 	
 	// check if a conversion has been completed, AKA if ADIF is high in ADCSRA
+	while(!(ADCSRA & (1<<ADIF)));
+	_delay_ms(500);
+	
+	ADCSRA |= (1<<ADSC);
 	while(!(ADCSRA & (1<<ADIF)));
 	
 	// return the value of the conversion

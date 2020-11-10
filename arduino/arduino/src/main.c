@@ -64,9 +64,9 @@ void scheduler_tasks(){
 	SCH_Add_Task(avg_temp, 0, 1);				// average temp measured in second increments
 	SCH_Add_Task(avg_dist, 0, 1);				// average distance measured in second increments
 	
-	SCH_Add_Task(set_light_bool, 5, 10);		// average light sent every 30 seconds
-	SCH_Add_Task(set_temp_bool, 5, 15);			// average temp sent every 40 seconds
-	SCH_Add_Task(set_distance_bool, 5, 30);		// average distance sent every 60 seconds
+	SCH_Add_Task(set_light_bool, 5, 5);		// average light sent every 30 seconds
+	SCH_Add_Task(set_temp_bool, 3, 10);			// average temp sent every 40 seconds
+	SCH_Add_Task(set_distance_bool, 5, 15);		// average distance sent every 60 seconds
 }
 
 void send_light(){
