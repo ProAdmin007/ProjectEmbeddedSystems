@@ -272,11 +272,8 @@ class RoomMenu(Page):
         up.grid(row=3, column=0, sticky="E")
         down.grid(row=3, column=1, sticky="W")
 
-<<<<<<< HEAD
-=======
         self.threshold_check(auto, sensorcom)
 
->>>>>>> 31290a989af42f69c7dc85c1aa5fc11899bfb8a2
     def buttonstate(self, button):
         if button.config('relief')[-1] == 'sunken':
             button.config(relief="raised")
