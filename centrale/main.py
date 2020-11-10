@@ -243,9 +243,9 @@ class RoomMenu(Page):
         auto = tk.Button(self.rframe, text="Handmatige bediening", width=20,
                          command=lambda: self.buttonstate(auto))
 
-        up = tk.Button(self.rframe, text="omhoog", width=10,
+        up = tk.Button(self.rframe, text="Omlaag", width=10,
                        command=lambda: sensorcom.send_byte(b'\x53'))
-        down = tk.Button(self.rframe, text="omlaag", width=10,
+        down = tk.Button(self.rframe, text="Omhoog", width=10,
                          command=lambda: sensorcom.send_byte(b'\x52'))
         # licht sensor widgets
         graphframe = tk.Frame(lightframe)
