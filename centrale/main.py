@@ -147,6 +147,7 @@ class RoomMenu(Page):
         self.toggle = False
         self.room = ""
         self.sensor = ""
+        self.serialconnections = {}
 
         lframe = tk.LabelFrame(self, padx=5, pady=5)
         lframe.grid(row=0, column=0, padx=5, pady=5)
@@ -227,7 +228,6 @@ class RoomMenu(Page):
 
         for widget in self.rframe.winfo_children():
             widget.destroy()
-        
         self.rframe.grid(row=0, column=1, padx=5, pady=5, rowspan=10)
         lightframe = tk.LabelFrame(self.rframe, width=200, height=200, padx=5,
                                    pady=5)
@@ -235,9 +235,7 @@ class RoomMenu(Page):
                                   pady=5)
         lightframe.grid(row=1, column=0, padx=40, pady=5)
         tempframe.grid(row=1, column=1, padx=40, pady=5)
-        comport = self.datastore.getjson()
-        comport = comport["Kamers"][self.room]["Scherm"][sensor]
-        sensorcom = grafieken.SensorData(comport)
+        sensorcom = self.get_sensor(sensor)
 
         backbtn = tk.Button(self.rframe, text="Terug naar kamers", width=70,
                             command=lambda: self.master.showroom('homepage'))
@@ -276,6 +274,14 @@ class RoomMenu(Page):
         down.grid(row=3, column=1, sticky="W")
 
         self.threshold_check(auto, sensorcom)
+
+    def get_sensor(self, sensor):
+        if sensor not in self.serialconnections:
+            data = self.datastore.getjson()
+            comport = data["Kamers"][self.room]["Scherm"][sensor]
+            self.serialconnections[sensor] = grafieken.SensorData(comport)
+        print(self.serialconnections)
+        return self.serialconnections.get(sensor)
 
     def buttonstate(self, button):
         if button.config('relief')[-1] == 'sunken':
