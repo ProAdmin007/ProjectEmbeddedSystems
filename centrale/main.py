@@ -227,6 +227,7 @@ class RoomMenu(Page):
 
         for widget in self.rframe.winfo_children():
             widget.destroy()
+        
         self.rframe.grid(row=0, column=1, padx=5, pady=5, rowspan=10)
         lightframe = tk.LabelFrame(self.rframe, width=200, height=200, padx=5,
                                    pady=5)
@@ -244,8 +245,10 @@ class RoomMenu(Page):
         auto = tk.Button(self.rframe, text="Handmatige bediening", width=20,
                          command=lambda: self.buttonstate(auto))
 
-        up = tk.Button(self.rframe, text="omhoog", width=10, command=lambda: sensorcom.send_byte(b'\x53'))
-        down = tk.Button(self.rframe, text="omlaag", width=10, command=lambda: sensorcom.send_byte(b'\x52'))
+        up = tk.Button(self.rframe, text="omhoog", width=10,
+                       command=lambda: sensorcom.send_byte(b'\x53'))
+        down = tk.Button(self.rframe, text="omlaag", width=10,
+                         command=lambda: sensorcom.send_byte(b'\x52'))
         # licht sensor widgets
         graphframe = tk.Frame(lightframe)
         labellight = tk.Label(lightframe, text="Licht sensor")
@@ -281,11 +284,12 @@ class RoomMenu(Page):
             button.config(relief="sunken")
 
     def threshold_check(self, button, arduino):
-        light_threshold = 50 # randomly chosen
+        light_threshold = 50  # randomly chosen
         open_command = b'\x53'
-        close_command =  b'\x52'
-
-        if button['relief'] == 'raised': # button not pressed, control it automatically. the other relief state is sunken
+        close_command = b'\x52'
+        # button not pressed, control it automatically.
+        # the other relief state is sunken
+        if button['relief'] == 'raised':
             # get the light data
             light_value = arduino.return_light()
 
@@ -305,6 +309,7 @@ class RoomMenu(Page):
 
         # call this function every second
         self.after(1000, lambda: self.threshold_check(button, arduino))
+
 
 class Addsensor(Page):
     def __init__(self, *args, **kwargs):
@@ -366,13 +371,14 @@ class Addsensor(Page):
             self.listport.append("niet gevonden")
             messagebox.showerror(title="Geen schermen gevonden",
                                  message="Er zijn geen schermen aangesloten")
-            self.master.showroom("roommenu")
+            return True
         else:
             for comport, hwid, devicename in sorted(comports):
                 self.listport.append(comport)
                 cmd = tk._setit(self.comport, comport)
                 self.dropdown['menu'].add_command(label=comport,
                                                   command=cmd)
+            return False
         self.comport.set(self.listport[0])
 
 
@@ -405,7 +411,10 @@ class MainView(tk.Frame):
             self.rooms[room].updateroom()
             self.rooms[room].updatelist()
         if room == "addsensor":
-            self.rooms[room].updatecoms()
+            update = self.rooms[room].updatecoms()
+            if update:
+                self.rooms["roommenu"].show()
+                return
         self.rooms[room].show()
 
     def getdata(self):
