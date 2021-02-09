@@ -1,2 +1,2 @@
 # ProjectEmbeddedSystems
-Hanze project
+Hanze project thema 2.2
